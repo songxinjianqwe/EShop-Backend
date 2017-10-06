@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.sinjinsong.skeleton.dao.mail.MailDOMapper">
+<mapper namespace="cn.sinjinsong.eshop.core.dao.mail.MailDOMapper">
 
     <resultMap id="BaseResultMap" type="cn.sinjinsong.eshop.core.domain.entity.mail.MailDO">
         <id column="id" property="id"></id>
         <result column="mail_status" property="mailStatus"
                 javaType="cn.sinjinsong.eshop.core.enumeration.mail.MailStatus"></result>
         <association property="sender" column="sender"
-                     select="cn.sinjinsong.skeleton.dao.user.UserDOMapper.findBriefInfoById"></association>
+                     select="cn.sinjinsong.eshop.core.dao.user.UserDOMapper.findBriefInfoById"></association>
         <association property="receiver" column="receiver"
-                     select="cn.sinjinsong.skeleton.dao.user.UserDOMapper.findBriefInfoById"></association>
+                     select="cn.sinjinsong.eshop.core.dao.user.UserDOMapper.findBriefInfoById"></association>
         <association property="text" column="text"
-                     select="cn.sinjinsong.skeleton.dao.mail.MailTextDOMapper.selectByPrimaryKey"></association>
+                     select="cn.sinjinsong.eshop.core.dao.mail.MailTextDOMapper.selectByPrimaryKey"></association>
     </resultMap>
     
     <sql id="Base_Column_List">
@@ -30,7 +30,7 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <insert id="insert" parameterType="cn.sinjinsong.skeleton.domain.entity.mail.MailDO">
+    <insert id="insert" parameterType="cn.sinjinsong.eshop.core.domain.entity.mail.MailDO">
     insert into mail (id, sender, receiver,
     mail_status, text)
     values (#{id,jdbcType=BIGINT}, #{sender.id,jdbcType=BIGINT}, #{receiver.id,jdbcType=BIGINT},

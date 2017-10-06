@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:mysql://localhost:3306/shiro?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+        url: jdbc:mysql://localhost:3306/eshop?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
         driverClassName: com.mysql.jdbc.Driver
         username: root
         password: 130119

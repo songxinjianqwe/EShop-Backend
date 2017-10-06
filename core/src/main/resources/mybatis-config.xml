@@ -31,6 +31,10 @@
                      javaType="cn.sinjinsong.eshop.core.enumeration.user.UserStatus"></typeHandler>
         <typeHandler handler="cn.sinjinsong.eshop.core.enumeration.conversion.MailStatusTypeHandler"
                      javaType="cn.sinjinsong.eshop.core.enumeration.mail.MailStatus"></typeHandler>
+       <typeHandler handler="cn.sinjinsong.eshop.core.enumeration.conversion.OrderStatusTypeHandler"
+                     javaType="cn.sinjinsong.eshop.core.enumeration.order.OrderStatus"></typeHandler>
+       <typeHandler handler="cn.sinjinsong.eshop.core.enumeration.conversion.ProductTypeTypeHandler"
+                     javaType="cn.sinjinsong.eshop.core.enumeration.product.ProductType"></typeHandler>
        
     </typeHandlers>
 
