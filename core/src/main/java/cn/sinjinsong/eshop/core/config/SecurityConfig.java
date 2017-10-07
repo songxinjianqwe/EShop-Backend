@@ -86,13 +86,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/v2/api-docs",
                         "/configuration/ui",
-                        "/swagger-resources",
+                        "/swagger-resources/**",
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**",
-                        "/swagger-resources/configuration/ui",
-                        "/swagge‌​r-ui.html",
-                        "/swagger-resources/configuration/security").permitAll()
+                        "/swagge‌​r-ui.html").permitAll()
                 //允许访问websocket页面
                 .antMatchers(HttpMethod.GET,"/ws").permitAll()
                 //允许向websocket的某个endpoint发送消息
@@ -115,9 +113,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/users/*/password").permitAll()
                 .antMatchers(HttpMethod.GET,"/articles/**").permitAll()
                 //获取token
-                .antMatchers(HttpMethod.POST, "/tokens").permitAll().and()
+                .antMatchers(HttpMethod.POST, "/tokens").permitAll() 
+                .antMatchers(HttpMethod.GET,"/news").permitAll()
+                .antMatchers(HttpMethod.GET,"/news/latest").permitAll()
+                
+                
                 //除上面外的所有请求全部需要鉴权认证
-                .authorizeRequests().anyRequest().authenticated().and();
+                .and().authorizeRequests().anyRequest().authenticated().and();
                 //Filter要放到是否认证的配置之后
 
         // 禁用缓存

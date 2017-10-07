@@ -24,7 +24,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <protostuff.version>1.5.2</protostuff.version>
-        <swagger.version>2.6.1</swagger.version>
+        <swagger.version>2.7.0</swagger.version>
     </properties>
     
      <dependencies>

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
@@ -25,6 +26,7 @@ public class NewsDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private String title;
 
     /**
@@ -34,6 +36,7 @@ public class NewsDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private String body;
 
     /**
@@ -44,6 +47,5 @@ public class NewsDO {
      * @mbggenerated
      */
     private LocalDateTime time;
-
    
 }

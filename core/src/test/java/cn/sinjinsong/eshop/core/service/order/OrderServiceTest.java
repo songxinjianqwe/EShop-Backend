@@ -1,7 +1,6 @@
 package cn.sinjinsong.eshop.core.service.order;
 
 import cn.sinjinsong.eshop.core.BaseSpringTest;
-import cn.sinjinsong.eshop.core.domain.dto.order.OrderQueryConditionDTO;
 import cn.sinjinsong.eshop.core.domain.entity.order.OrderDO;
 import cn.sinjinsong.eshop.core.enumeration.order.OrderStatus;
 import cn.sinjinsong.eshop.core.service.product.ProductService;
@@ -44,8 +43,12 @@ public class OrderServiceTest extends BaseSpringTest {
 
     @Test
     public void findAllByCondition() throws Exception {
-        orderService.findAllByCondition(OrderQueryConditionDTO.builder().status(OrderStatus.PAID).build(),0,0).getList().forEach(System.out::println);
-        
+//        orderService.findAllByCondition(OrderQueryConditionDTO.builder().status(OrderStatus.PAID).build(),0,0).getList().forEach(System.out::println);
+//        LocalDateTime begin = LocalDateTime.of(2017,10,6,0,0);
+//        LocalDateTime end = LocalDateTime.of(2017,10,7,0,0);
+                
+//        orderService.findAllByCondition(OrderQueryConditionDTO.builder().begin(begin).end(end).build(),0,0).getList().forEach(System.out::println);
+//        orderService.findAllByCondition(OrderQueryConditionDTO.builder().userId(1L).categoryId(1L).build(),0,0).getList().forEach(System.out::println);
     }
     
     @Test

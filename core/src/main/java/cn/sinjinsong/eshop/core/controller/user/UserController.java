@@ -81,7 +81,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "创建用户，为用户发送验证邮件，等待用户激活，若24小时内未激活需要重新注册", response = Void.class)
+    @ApiOperation(value = "创建用户，为用户发送验证邮件，等待用户激活，若24小时内未激活需要重新注册")
     @ApiResponses(value = {
             @ApiResponse(code = 409, message = "用户名已存在"),
             @ApiResponse(code = 400, message = "用户属性校验失败")
@@ -140,7 +140,7 @@ public class UserController {
     // 更新
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("#user.username == principal.username or hasRole('ADMIN')")
-    @ApiOperation(value = "更新用户信息", response = Void.class, authorizations = {@Authorization("登录权限")})
+    @ApiOperation(value = "更新用户信息", authorizations = {@Authorization("登录权限")})
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "未登录"),
             @ApiResponse(code = 404, message = "用户属性校验失败"),
