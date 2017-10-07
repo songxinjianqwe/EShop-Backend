@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RESTResponseStatus {
+public @interface RestResponseStatus {
     /**
      * HTTP状态码
      * @return

@@ -118,7 +118,6 @@ public class UserDO implements Serializable {
 
     private UserStatus userStatus;
     private String avatar;
-    private Double balance;
     public UserDO(Long id) {
         this.id = id;
     }

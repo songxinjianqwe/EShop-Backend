@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.core.controller.user;
 
-import cn.sinjinsong.eshop.common.exception.ValidationException;
+import cn.sinjinsong.eshop.common.exception.RestValidationException;
 import cn.sinjinsong.eshop.common.util.SpringContextUtil;
 import cn.sinjinsong.eshop.core.domain.dto.user.LoginDTO;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
@@ -83,7 +83,7 @@ public class TokenController {
         }
         //登录信息不完整
         if (result.hasErrors()) {
-            throw new ValidationException(result.getFieldErrors());
+            throw new RestValidationException(result.getFieldErrors());
         }
 
         LoginHandler loginHandler = SpringContextUtil.getBean("LoginHandler", loginDTO.getUserMode().toString().toLowerCase());

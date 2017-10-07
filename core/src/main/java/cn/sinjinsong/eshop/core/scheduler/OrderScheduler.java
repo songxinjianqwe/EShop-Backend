@@ -1,9 +1,10 @@
 package cn.sinjinsong.eshop.core.scheduler;
 
 
-import cn.sinjinsong.eshop.common.cache.RedisCacheManager;
+import cn.sinjinsong.eshop.core.service.order.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -57,16 +58,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class Scheduler {
+public class OrderScheduler {
     @Autowired
-    private RedisCacheManager redisCacheManager;
-    
-//    /**
-//     * 每隔1分钟定时清理缓存
-//     */
-//    @Scheduled(cron = "0 0/1 * * * ? ")
-//    public void cacheClear() {
-//        log.info("清空缓存");
-//        redisCacheManager.clearCache();
-//    }
+    private OrderService orderService;
+
+    /**
+     * 每隔1分钟将超时订单状态设置为超时
+     */
+    @Scheduled(cron = "0 0/1 * * * ? ")
+    public void clearTimeOutOrders(){
+        orderService.updateTimeOutOrders();
+    }
 }

@@ -116,8 +116,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/tokens").permitAll() 
                 .antMatchers(HttpMethod.GET,"/news").permitAll()
                 .antMatchers(HttpMethod.GET,"/news/latest").permitAll()
-                
-                
+                .antMatchers(HttpMethod.GET,"/products/categories").permitAll()
+                .antMatchers(HttpMethod.GET,"/products/by_category/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/products/*").permitAll()
+                                
                 //除上面外的所有请求全部需要鉴权认证
                 .and().authorizeRequests().anyRequest().authenticated().and();
                 //Filter要放到是否认证的配置之后

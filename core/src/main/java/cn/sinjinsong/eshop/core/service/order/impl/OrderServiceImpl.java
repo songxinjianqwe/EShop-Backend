@@ -7,6 +7,7 @@ import cn.sinjinsong.eshop.core.enumeration.order.OrderStatus;
 import cn.sinjinsong.eshop.core.properties.OrderProperties;
 import cn.sinjinsong.eshop.core.service.order.OrderService;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
  * Created by SinjinSong on 2017/10/6.
  */
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDOMapper mapper;
@@ -57,9 +59,11 @@ public class OrderServiceImpl implements OrderService {
     public void updateTimeOutOrders() {
         findAllByCondition(OrderQueryConditionDTO.builder().status(OrderStatus.UNPAID).build(), 0, 0).getList().forEach(
                 (OrderDO order) -> {
-                    if (Duration.between(LocalDateTime.now(), order.getPlaceTime()).toMinutes() >= OrderProperties.TIME_OUT_SPAN) {
+                    log.info("未付款订单号:{}", order.getId());
+                    if (Duration.between(order.getPlaceTime(), LocalDateTime.now()).toMinutes() >= OrderProperties.TIME_OUT_SPAN) {
                         order.setOrderStatus(OrderStatus.TIME_OUT);
                         mapper.updateByPrimaryKeySelective(order);
+                        log.info("超时订单:{}", order.getId());
                     }
                 }
         );

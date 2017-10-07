@@ -1,16 +1,16 @@
 package cn.sinjinsong.eshop.common.exception.annotation;
 
 
-import cn.sinjinsong.eshop.common.exception.base.BaseRESTException;
+import cn.sinjinsong.eshop.common.exception.base.BaseRestException;
 
 /**
  * Created by SinjinSong on 2017/3/27.
  */
-public class RESTExceptionAnnotationUtil {
-    public static void setAttr(BaseRESTException e) {
-        RESTResponseStatus status = e.getClass().getAnnotation(RESTResponseStatus.class);
+public class RestExceptionAnnotationUtil {
+    public static void setAttr(BaseRestException e) {
+        RestResponseStatus status = e.getClass().getAnnotation(RestResponseStatus.class);
         if (status == null) {
-            throw new RESTResponseStatusAnnotationNotFoundException();
+            throw new RestResponseStatusAnnotationNotFoundException();
         }
         e.setStatus(status.value());
         e.setCode(Integer.parseInt(status.value().value() + "" + String.format("%02d", status.code())));
@@ -18,10 +18,10 @@ public class RESTExceptionAnnotationUtil {
 
     }
 
-    public static String getMsgKey(BaseRESTException e) {
-        RESTResponseStatus status = e.getClass().getAnnotation(RESTResponseStatus.class);
+    public static String getMsgKey(BaseRestException e) {
+        RestResponseStatus status = e.getClass().getAnnotation(RestResponseStatus.class);
         if (status == null) {
-            throw new RESTResponseStatusAnnotationNotFoundException();
+            throw new RestResponseStatusAnnotationNotFoundException();
         }
         if (status.msgKey().equals("")) {
             String simpleName = e.getClass().getSimpleName();
@@ -31,8 +31,8 @@ public class RESTExceptionAnnotationUtil {
         }
     }
 
-    public static String getFieldName(BaseRESTException e) {
-        RESTField field = e.getClass().getAnnotation(RESTField.class);
+    public static String getFieldName(BaseRestException e) {
+        RestField field = e.getClass().getAnnotation(RestField.class);
         if (field == null) {
             throw new RESTFieldAnnotationNotFoundException();
         }

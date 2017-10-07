@@ -1,16 +1,16 @@
 package cn.sinjinsong.eshop.common.exception.file;
 
-import cn.sinjinsong.eshop.common.exception.annotation.RESTField;
-import cn.sinjinsong.eshop.common.exception.annotation.RESTResponseStatus;
-import cn.sinjinsong.eshop.common.exception.base.BaseRESTException;
+import cn.sinjinsong.eshop.common.exception.annotation.RestField;
+import cn.sinjinsong.eshop.common.exception.annotation.RestResponseStatus;
+import cn.sinjinsong.eshop.common.exception.base.BaseRestException;
 import org.springframework.http.HttpStatus;
 
 /**
  * Created by SinjinSong on 2017/4/29.
  */
-@RESTResponseStatus(value= HttpStatus.BAD_REQUEST,code=6)
-@RESTField("file")
-public class FileDownloadException extends BaseRESTException {
+@RestResponseStatus(value= HttpStatus.BAD_REQUEST,code=6)
+@RestField("file")
+public class FileDownloadException extends BaseRestException {
     public FileDownloadException(String file){
         super(file);
     }

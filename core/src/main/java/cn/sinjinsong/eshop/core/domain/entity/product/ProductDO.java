@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +28,7 @@ public class ProductDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private String name;
 
     /**
@@ -34,6 +38,8 @@ public class ProductDO {
      *
      * @mbggenerated
      */
+    @NotNull
+    @Min(1)
     private Double price;
 
     /**
@@ -43,6 +49,7 @@ public class ProductDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private ProductCategoryDO category;
 
     /**
@@ -52,6 +59,8 @@ public class ProductDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private ProductType type;
+    @NotNull
     private String description;
 }

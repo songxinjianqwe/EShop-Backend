@@ -42,26 +42,9 @@
             <property name="rootInterface" value=""/>
         </javaClientGenerator>
 
-        <!--<table tableName="news"-->
-               <!--domainObjectName="NewsDO"-->
-               <!--enableCountByExample="false"-->
-               <!--enableUpdateByExample="false"-->
-               <!--enableDeleteByExample="false"-->
-               <!--enableSelectByExample="false"-->
-               <!--selectByExampleQueryId="false"-->
-                <!--&gt;-->
-        <!--</table>-->
-        <!--<table tableName="order"-->
-               <!--domainObjectName="OrderDO"-->
-               <!--enableCountByExample="false"-->
-               <!--enableUpdateByExample="false"-->
-               <!--enableDeleteByExample="false"-->
-               <!--enableSelectByExample="false"-->
-               <!--selectByExampleQueryId="false"-->
-                <!--&gt;-->
-        <!--</table>-->
-        <table tableName="product"
-               domainObjectName="ProductDO"
+      
+        <table tableName="balance"
+               domainObjectName="BalanceDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
@@ -69,14 +52,5 @@
                selectByExampleQueryId="false"
                 >
         </table>
-        <!--<table tableName="product_category"-->
-               <!--domainObjectName="ProductCategoryDO"-->
-               <!--enableCountByExample="false"-->
-               <!--enableUpdateByExample="false"-->
-               <!--enableDeleteByExample="false"-->
-               <!--enableSelectByExample="false"-->
-               <!--selectByExampleQueryId="false"-->
-                <!--&gt;-->
-        <!--</table>-->
     </context>
 </generatorConfiguration>

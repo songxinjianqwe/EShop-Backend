@@ -21,4 +21,6 @@ public class OrderQueryConditionDTO {
     private LocalDateTime begin;
     private LocalDateTime end;
     private OrderStatus status;
+    private Integer pageNum;
+    private Integer pageSize;
 }

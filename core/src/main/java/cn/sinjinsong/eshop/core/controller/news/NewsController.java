@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.core.controller.news;
 
-import cn.sinjinsong.eshop.common.exception.ValidationException;
+import cn.sinjinsong.eshop.common.exception.RestValidationException;
 import cn.sinjinsong.eshop.core.domain.entity.news.NewsDO;
 import cn.sinjinsong.eshop.core.service.news.NewsService;
 import io.swagger.annotations.Api;
@@ -51,7 +51,7 @@ public class NewsController {
     public void saveNews(@RequestBody @Valid @ApiParam(value = "新闻对象", required = true) NewsDO news, BindingResult result) {
         log.info("{}", news);
         if (result.hasErrors()) {
-            throw new ValidationException(result.getFieldErrors());
+            throw new RestValidationException(result.getFieldErrors());
         }
         news.setTime(LocalDateTime.now());
         newsService.save(news);
@@ -63,7 +63,7 @@ public class NewsController {
     public void updateNews(@RequestBody @Valid @ApiParam(value = "新闻对象", required = true) NewsDO news, BindingResult result) {
         log.info("{}", news);
         if (result.hasErrors()) {
-            throw new ValidationException(result.getFieldErrors());
+            throw new RestValidationException(result.getFieldErrors());
         }
         news.setTime(LocalDateTime.now());
         newsService.update(news);

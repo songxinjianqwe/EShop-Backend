@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.core.controller.user;
 
-import cn.sinjinsong.eshop.common.exception.ValidationException;
+import cn.sinjinsong.eshop.common.exception.RestValidationException;
 import cn.sinjinsong.eshop.common.util.FileUtil;
 import cn.sinjinsong.eshop.common.util.SpringContextUtil;
 import cn.sinjinsong.eshop.common.util.UUIDUtil;
@@ -91,7 +91,7 @@ public class UserController {
         if (isUsernameDuplicated(user.getUsername())) {
             throw new UsernameExistedException(user.getUsername());
         } else if (result.hasErrors()) {
-            throw new ValidationException(result.getFieldErrors());
+            throw new RestValidationException(result.getFieldErrors());
         }
         
         //生成邮箱的激活码
@@ -149,7 +149,7 @@ public class UserController {
     })
     public void updateUser(@RequestBody @Valid @ApiParam(value = "用户信息，用户的用户名、密码、昵称、邮箱不可为空", required = true) UserDO user, BindingResult result) {
         if (result.hasErrors()) {
-            throw new ValidationException(result.getFieldErrors());
+            throw new RestValidationException(result.getFieldErrors());
         }
         service.update(user);
     }

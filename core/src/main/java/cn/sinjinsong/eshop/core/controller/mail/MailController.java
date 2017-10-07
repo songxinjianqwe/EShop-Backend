@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.core.controller.mail;
 
-import cn.sinjinsong.eshop.common.exception.ValidationException;
+import cn.sinjinsong.eshop.common.exception.RestValidationException;
 import cn.sinjinsong.eshop.core.domain.dto.mail.MailDTO;
 import cn.sinjinsong.eshop.core.domain.entity.mail.MailDO;
 import cn.sinjinsong.eshop.core.enumeration.mail.MailStatus;
@@ -66,7 +66,7 @@ public class MailController {
     })
     public void sendMails(@RequestBody @Valid @ApiParam(value = "站内信对象", required = true) MailDTO mailDTO, BindingResult result, @AuthenticationPrincipal JWTUser user) {
         if (result.hasErrors()) {
-            throw new ValidationException(result.getFieldErrors());
+            throw new RestValidationException(result.getFieldErrors());
         }
         Long senderId = user.getId();
         log.info("senderId:{}",senderId);

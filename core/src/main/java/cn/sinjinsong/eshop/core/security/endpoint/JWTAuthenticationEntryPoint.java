@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.core.security.endpoint;
 
-import cn.sinjinsong.eshop.common.exception.base.BaseRESTException;
+import cn.sinjinsong.eshop.common.exception.base.BaseRestException;
 import cn.sinjinsong.eshop.common.exception.domain.RESTError;
 import cn.sinjinsong.eshop.common.util.JsonUtil;
 import cn.sinjinsong.eshop.core.properties.AuthenticationProperties;
@@ -28,7 +28,7 @@ public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
                          AuthenticationException authException) throws IOException {
         log.info("到达JWTAuthenticationEntryPoint");
         if(request.getAttribute(AuthenticationProperties.EXCEPTION_ATTR_NAME) != null){
-            BaseRESTException exception = (BaseRESTException) request.getAttribute(AuthenticationProperties.EXCEPTION_ATTR_NAME);
+            BaseRestException exception = (BaseRestException) request.getAttribute(AuthenticationProperties.EXCEPTION_ATTR_NAME);
             response.setStatus(exception.getStatus().value());
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().append(JsonUtil.json(new RESTError(exception.getStatus(),exception.getCode(),exception.getErrors(),exception.getMoreInfoURL())));

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
@@ -28,6 +30,7 @@ public class OrderDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private ProductDO product;
 
     /**
@@ -37,6 +40,8 @@ public class OrderDO {
      *
      * @mbggenerated
      */
+    @NotNull
+    @Min(1)
     private Integer quantity;
 
     /**
@@ -46,6 +51,7 @@ public class OrderDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private UserDO user;
 
     /**
@@ -64,6 +70,7 @@ public class OrderDO {
      *
      * @mbggenerated
      */
+    @NotNull
     private Double totalPrice;
 
     /**

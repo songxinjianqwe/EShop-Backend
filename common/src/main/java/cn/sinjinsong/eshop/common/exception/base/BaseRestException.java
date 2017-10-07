@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.common.exception.base;
 
-import cn.sinjinsong.eshop.common.exception.annotation.RESTExceptionAnnotationUtil;
+import cn.sinjinsong.eshop.common.exception.annotation.RestExceptionAnnotationUtil;
 import cn.sinjinsong.eshop.common.exception.domain.RESTFieldError;
 import cn.sinjinsong.eshop.common.util.InternationalizeUtil;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -11,23 +11,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BaseRESTException extends RuntimeException {
+public class BaseRestException extends RuntimeException {
     private HttpStatus status;
     private int code;
     private List<RESTFieldError> error;
     private String moreInfoURL = "";
 
-    public BaseRESTException() {
+    public BaseRestException() {
     }
 
-    public BaseRESTException(Object rejectedValue) {
-        RESTExceptionAnnotationUtil.setAttr(this);
-        this.error = Arrays.asList(new RESTFieldError(RESTExceptionAnnotationUtil.getFieldName(this), rejectedValue, InternationalizeUtil
-                .getMessage("i18n." + RESTExceptionAnnotationUtil.getMsgKey(this), LocaleContextHolder.getLocale())));
+    public BaseRestException(Object rejectedValue) {
+        RestExceptionAnnotationUtil.setAttr(this);
+        this.error = Arrays.asList(new RESTFieldError(RestExceptionAnnotationUtil.getFieldName(this), rejectedValue, InternationalizeUtil
+                .getMessage("i18n." + RestExceptionAnnotationUtil.getMsgKey(this), LocaleContextHolder.getLocale())));
     }
 
-    public BaseRESTException(List<FieldError> error) {
-        RESTExceptionAnnotationUtil.setAttr(this);
+    public BaseRestException(List<FieldError> error) {
+        RestExceptionAnnotationUtil.setAttr(this);
         this.error = toRestFieldErrorList(error);
     }
 

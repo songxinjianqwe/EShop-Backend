@@ -1,7 +1,7 @@
 package cn.sinjinsong.eshop.core.security.domain;
 
 
-import cn.sinjinsong.eshop.common.exception.base.BaseRESTException;
+import cn.sinjinsong.eshop.common.exception.base.BaseRestException;
 
 /**
  * Created by SinjinSong on 2017/5/9.
@@ -9,9 +9,9 @@ import cn.sinjinsong.eshop.common.exception.base.BaseRESTException;
 public class TokenCheckResult {
     private boolean isValid;
     private String username;
-    private BaseRESTException exception;
+    private BaseRestException exception;
 
-    public TokenCheckResult(boolean isValid, String username, BaseRESTException exception) {
+    public TokenCheckResult(boolean isValid, String username, BaseRestException exception) {
         this.isValid = isValid;
         this.username = username;
         this.exception = exception;
@@ -33,11 +33,11 @@ public class TokenCheckResult {
         this.username = username;
     }
 
-    public BaseRESTException getException() {
+    public BaseRestException getException() {
         return exception;
     }
 
-    public void setException(BaseRESTException exception) {
+    public void setException(BaseRestException exception) {
         this.exception = exception;
     }
 
@@ -53,7 +53,7 @@ public class TokenCheckResult {
     public static class TokenCheckResultBuilder {
         private boolean isValid;
         private String username;
-        private BaseRESTException exception;
+        private BaseRestException exception;
 
         public TokenCheckResultBuilder() {
         }
@@ -73,7 +73,7 @@ public class TokenCheckResult {
             return this;
         }
 
-        public TokenCheckResultBuilder exception(BaseRESTException exception) {
+        public TokenCheckResultBuilder exception(BaseRestException exception) {
             this.exception = exception;
             return this;
         }
