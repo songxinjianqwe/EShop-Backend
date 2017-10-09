@@ -5,7 +5,6 @@ server:
         uri-encoding: UTF-8
         max-threads: 1000
         min-spare-threads: 30
-      
 # mysql
 spring:
     # 环境 dev|test|pro
@@ -14,9 +13,7 @@ spring:
     output:
       ansi:
         enabled: detect #配置输出console的ide中的配色
-    # jackson时间格式化
-    jackson:
-        time-zone: GMT+8
+#    jackson:
     #    default-property-inclusion: non_null    #忽略null字段
     #文件上传
     http:
@@ -52,7 +49,8 @@ spring:
       cache: false
     aop:
       auto: true
-      proxy-target-class: true
+      proxy-target-class: false
+
 ## Mybatis配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml

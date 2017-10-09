@@ -1,5 +1,7 @@
 package cn.sinjinsong.eshop.core.domain.entity.mail;
 
+import cn.sinjinsong.eshop.common.properties.DateTimeProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,7 @@ public class MailTextDO {
      *
      * @mbggenerated
      */
+    @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)
     private LocalDateTime sendTime;
     
     /**

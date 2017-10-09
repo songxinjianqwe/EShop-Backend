@@ -76,6 +76,7 @@ public class UserController {
         if (userDO == null) {
             throw new UserNotFoundException(key);
         }
+        userDO.setPassword(null);
         return userDO;
     }
 

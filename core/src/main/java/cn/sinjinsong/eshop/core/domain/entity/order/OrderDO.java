@@ -1,8 +1,10 @@
 package cn.sinjinsong.eshop.core.domain.entity.order;
 
+import cn.sinjinsong.eshop.common.properties.DateTimeProperties;
 import cn.sinjinsong.eshop.core.domain.entity.product.ProductDO;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.order.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,6 +63,7 @@ public class OrderDO {
      *
      * @mbggenerated
      */
+    @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)
     private LocalDateTime placeTime;
 
     /**

@@ -1,6 +1,8 @@
 package cn.sinjinsong.eshop.core.domain.dto.order;
 
+import cn.sinjinsong.eshop.common.properties.DateTimeProperties;
 import cn.sinjinsong.eshop.core.enumeration.order.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +20,9 @@ import java.time.LocalDateTime;
 public class OrderQueryConditionDTO {
     private Long userId;
     private Long categoryId;
+    @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)
     private LocalDateTime begin;
+    @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)
     private LocalDateTime end;
     private OrderStatus status;
     private Integer pageNum;

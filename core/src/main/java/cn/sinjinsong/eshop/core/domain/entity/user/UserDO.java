@@ -1,6 +1,8 @@
 package cn.sinjinsong.eshop.core.domain.entity.user;
 
+import cn.sinjinsong.eshop.common.properties.DateTimeProperties;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -78,6 +80,7 @@ public class UserDO implements Serializable {
      * @mbggenerated
      */
     @Past
+    @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_PATTERN)
     private LocalDate birthday;
 
     /**
@@ -86,6 +89,7 @@ public class UserDO implements Serializable {
      *
      * @mbggenerated
      */
+    @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)
     private LocalDateTime regTime;
 
     /**

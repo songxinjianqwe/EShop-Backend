@@ -1,5 +1,7 @@
 package cn.sinjinsong.eshop.core.domain.entity.news;
 
+import cn.sinjinsong.eshop.common.properties.DateTimeProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,6 +48,7 @@ public class NewsDO {
      *
      * @mbggenerated
      */
+    @JsonFormat(pattern = DateTimeProperties.LOCAL_DATE_TIME_PATTERN)
     private LocalDateTime time;
    
 }
