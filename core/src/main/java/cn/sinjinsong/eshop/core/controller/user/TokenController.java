@@ -74,8 +74,9 @@ public class TokenController {
             @ApiResponse(code = 401, message = "用户未激活")
     })
     public String login(@Valid @RequestBody @ApiParam(value = "登录信息，要求用户名或手机号或邮箱有一个非空，且登录模式与其对应，可选值为username或phone；密码非空；验证id和验证码也非空", required = true) LoginDTO loginDTO, BindingResult result) {
+        log.info("{}",loginDTO);
         //先验证图片验证码，再验证用户名和密码
-        if (!verificationManager.checkVerificationCode(loginDTO.getCaptchaCode(), loginDTO.getCaptchaValue())) {
+        if (!verificationManager.checkVerificationCode(loginDTO.getCaptchaCode(), loginDTO.getCaptchaValue().toUpperCase())) {
             //验证失败，清除验证码
             verificationManager.deleteVerificationCode(loginDTO.getCaptchaCode());
             throw new CaptchaValidationException(loginDTO.getCaptchaValue());

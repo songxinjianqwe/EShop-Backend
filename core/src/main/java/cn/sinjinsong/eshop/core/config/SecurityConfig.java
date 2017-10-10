@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -72,6 +73,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 //添加JWTFilter
                 .authorizeRequests()
+                //允许跨域的预检请求OPTIONS
+                //详情见CORS阮一峰
+                .requestMatchers(CorsUtils:: isPreFlightRequest).permitAll()
                 //允许访问静态资源
                 .antMatchers(
                         HttpMethod.GET,
@@ -91,10 +95,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/swagge‌​r-ui.html").permitAll()
-                //允许访问websocket页面
-                .antMatchers(HttpMethod.GET,"/ws").permitAll()
-                //允许向websocket的某个endpoint发送消息
-                .antMatchers("/endpoint/**").permitAll()
                 //允许访问Druid监控
                 .antMatchers("/druid/**").permitAll()
                 //获取图片验证码
