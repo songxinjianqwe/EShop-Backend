@@ -1,6 +1,7 @@
 package cn.sinjinsong.eshop.core.controller.user;
 
-import cn.sinjinsong.eshop.common.domain.Captcha;
+import cn.sinjinsong.eshop.common.domain.CaptchaDTO;
+import cn.sinjinsong.eshop.common.domain.CaptchaVO;
 import cn.sinjinsong.eshop.common.util.CaptchaUtil;
 import cn.sinjinsong.eshop.common.util.UUIDUtil;
 import cn.sinjinsong.eshop.core.properties.AuthenticationProperties;
@@ -13,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Created by SinjinSong on 2017/4/27.
@@ -30,39 +29,16 @@ public class CaptchaController {
     @Autowired
     private AuthenticationProperties authenticationProperties;
     
-    /**
-     * 如果想在@ResponseBody方法中返回Cookie或者设置响应头，必须先设置Cookie或设置响应头，再设置response的内容（返回值）
-     * 另外，返回字节流时需要获取response中的输出流，将字节写入输出流，而非返回字节数组
-     *
-     * @param response
-     * @return
-     */
     @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "获取验证码，在登录之前请求", response = Byte.class)
-    public void getCaptcha(HttpServletResponse response) {
+    @ApiOperation(value = "获取验证码，在登录之前请求", response = CaptchaVO.class)
+    public CaptchaVO getCaptcha() throws IOException {
         String uuid = UUIDUtil.uuid();
-        Captcha captcha = CaptchaUtil.createRandomCode();
-
-//        返回Cookie
-//        Cookie cookie = new Cookie("captchaCode", uuid);
-//        cookie.setMaxAge(audience.getCaptchaExpireTime());
-//        response.addCookie(cookie);
-
-        //返回响应头
-        response.setHeader("captchaCode", uuid);
+        CaptchaDTO captchaDTO = CaptchaUtil.createRandomCode();
         //保存
-        verificationManager.createVerificationCode(uuid, captcha.getValue(),authenticationProperties.getCaptchaExpireTime());
-        log.info("uuid:{}",uuid);
-        log.info("value:{}",captcha.getValue());
+        verificationManager.createVerificationCode(uuid, captchaDTO.getValue(), authenticationProperties.getCaptchaExpireTime());
+        log.info("uuid:{}", uuid);
+        log.info("value:{}", captchaDTO);
         //返回图片
-        OutputStream os;
-        try {
-            os = response.getOutputStream();
-            os.write(captcha.getImage());
-            os.flush();
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return new CaptchaVO(captchaDTO.getImage(),uuid);
     }
 }

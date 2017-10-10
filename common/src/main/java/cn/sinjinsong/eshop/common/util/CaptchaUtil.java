@@ -1,7 +1,8 @@
 package cn.sinjinsong.eshop.common.util;
 
 
-import cn.sinjinsong.eshop.common.domain.Captcha;
+import cn.sinjinsong.eshop.common.domain.CaptchaDTO;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,16 +22,19 @@ public final class CaptchaUtil {
     // 随机字符数组
     private static final char[] charSequence = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
     private static ThreadLocalRandom random;
-    private CaptchaUtil(){}
+
+    private CaptchaUtil() {
+    }
+
     /**
      * 将生成的验证码图片写到传入的流中
      * 并返回真正的数据
-     * 
+     *
      * @return
      */
-    public static Captcha createRandomCode() {
+    public static CaptchaDTO createRandomCode() {
         random = ThreadLocalRandom.current();
-        
+
         // 指定图形验证码图片的大小
         int width = 80, height = 25;
         // 生成一张新图片
@@ -72,18 +76,22 @@ public final class CaptchaUtil {
         }
 
         String code = sRand.toString();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
         g.dispose();
-        // 输出图形验证码图片
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        CaptchaDTO captchaDTO = null;
         try {
-            ImageIO.write(image, "JPEG", bao);
+            // 输出图形验证码图片
+            ImageIO.write(image, "JPEG", os);
+            captchaDTO = new CaptchaDTO(Base64.encodeBase64String(os.toByteArray()), code);
+            os.flush();
+            os.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Captcha(bao.toByteArray(),code);
+        return captchaDTO;
     }
 
-   
+
     // 生成随机颜色
     private static Color getRandomColor(int fc, int bc) {
         Random random = new Random();

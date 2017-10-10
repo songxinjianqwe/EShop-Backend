@@ -44,7 +44,6 @@ public class TokenController {
     private TokenManager tokenManager;
     @Autowired
     private VerificationManager verificationManager;
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -118,7 +117,7 @@ public class TokenController {
     }
     
     @RequestMapping(method = RequestMethod.DELETE)
-    @ApiOperation(value = "登出", response = Void.class, authorizations = {@Authorization("登录权限")})
+    @ApiOperation(value = "登出", authorizations = {@Authorization("登录权限")})
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "未登录")
     })

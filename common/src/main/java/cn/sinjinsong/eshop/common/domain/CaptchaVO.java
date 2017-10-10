@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created by SinjinSong on 2017/4/27.
+ * Created by SinjinSong on 2017/10/10.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Captcha {
-    private byte[] image;
-    private String value;
+public class CaptchaVO {
+    private String image;
+    private String captchaCode;
 }
