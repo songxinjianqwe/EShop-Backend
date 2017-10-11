@@ -69,7 +69,7 @@
         insert into user (id, username, password,
         nickname, real_name, sex,
         birthday, reg_time, email,
-        phone,user_status,avatar
+        phone,user_status,avatar )
         values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
         #{nickname,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR},
         #{birthday,jdbcType=DATE}, #{regTime,jdbcType=TIMESTAMP}, #{email,jdbcType=VARCHAR},

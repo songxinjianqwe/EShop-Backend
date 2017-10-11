@@ -121,8 +121,8 @@ public class UserController {
         FileUtil.download(relativePath, request.getServletContext(), response);
     }
 
-    @RequestMapping(value = "/{id}/activation", method = RequestMethod.GET)
-    @ApiOperation(value = "用户激活，前置条件是用户已注册且在24小时内", response = Void.class)
+    @RequestMapping(value = "/{id}/activation", method = RequestMethod.POST)
+    @ApiOperation(value = "用户激活，前置条件是用户已注册且在24小时内")
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "未注册或超时或激活码错误")
     })
