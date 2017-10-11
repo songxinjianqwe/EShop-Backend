@@ -55,4 +55,5 @@ public interface ProductCategoryDOMapper {
      */
     int updateByPrimaryKey(ProductCategoryDO record);
     List<ProductCategoryDO> findAll();
+    List<ProductCategoryDO> findOnBoard();
 }

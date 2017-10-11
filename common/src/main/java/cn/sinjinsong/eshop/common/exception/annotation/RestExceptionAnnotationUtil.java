@@ -34,7 +34,7 @@ public class RestExceptionAnnotationUtil {
     public static String getFieldName(BaseRestException e) {
         RestField field = e.getClass().getAnnotation(RestField.class);
         if (field == null) {
-            throw new RESTFieldAnnotationNotFoundException();
+            throw new RestFieldAnnotationNotFoundException();
         }
         return field.value();
     }

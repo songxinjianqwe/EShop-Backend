@@ -2,6 +2,7 @@ package cn.sinjinsong.eshop.core.domain.entity.user;
 
 import cn.sinjinsong.eshop.common.properties.DateTimeProperties;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
+import cn.sinjinsong.eshop.core.validator.Past;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalDate;

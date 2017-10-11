@@ -43,8 +43,8 @@
         </javaClientGenerator>
 
       
-        <table tableName="ad"
-               domainObjectName="AdDO"
+        <table tableName="product_category"
+               domainObjectName="ProductCategoryDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

@@ -1,7 +1,7 @@
 package cn.sinjinsong.eshop.common.exception.base;
 
 import cn.sinjinsong.eshop.common.exception.annotation.RestExceptionAnnotationUtil;
-import cn.sinjinsong.eshop.common.exception.domain.RESTFieldError;
+import cn.sinjinsong.eshop.common.exception.domain.RestFieldError;
 import cn.sinjinsong.eshop.common.util.InternationalizeUtil;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import java.util.List;
 public class BaseRestException extends RuntimeException {
     private HttpStatus status;
     private int code;
-    private List<RESTFieldError> error;
+    private List<RestFieldError> error;
     private String moreInfoURL = "";
 
     public BaseRestException() {
@@ -22,7 +22,7 @@ public class BaseRestException extends RuntimeException {
 
     public BaseRestException(Object rejectedValue) {
         RestExceptionAnnotationUtil.setAttr(this);
-        this.error = Arrays.asList(new RESTFieldError(RestExceptionAnnotationUtil.getFieldName(this), rejectedValue, InternationalizeUtil
+        this.error = Arrays.asList(new RestFieldError(RestExceptionAnnotationUtil.getFieldName(this), rejectedValue, InternationalizeUtil
                 .getMessage("i18n." + RestExceptionAnnotationUtil.getMsgKey(this), LocaleContextHolder.getLocale())));
     }
 
@@ -31,19 +31,19 @@ public class BaseRestException extends RuntimeException {
         this.error = toRestFieldErrorList(error);
     }
 
-    public static List<RESTFieldError> toRestFieldErrorList(List<FieldError> errors) {
-        List<RESTFieldError> fieldErrors = new ArrayList<>(errors.size());
+    public static List<RestFieldError> toRestFieldErrorList(List<FieldError> errors) {
+        List<RestFieldError> fieldErrors = new ArrayList<>(errors.size());
         for (FieldError error : errors) {
-            fieldErrors.add(new RESTFieldError(error));
+            fieldErrors.add(new RestFieldError(error));
         }
         return fieldErrors;
     }
 
-    public List<RESTFieldError> getErrors() {
+    public List<RestFieldError> getErrors() {
         return error;
     }
 
-    public void setErrors(List<RESTFieldError> error) {
+    public void setErrors(List<RestFieldError> error) {
         this.error = error;
     }
 

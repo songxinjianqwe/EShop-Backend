@@ -2,18 +2,18 @@ package cn.sinjinsong.eshop.common.exception.domain;
 
 import org.springframework.validation.FieldError;
 
-public class RESTFieldError {
+public class RestFieldError {
 	private String field;
 	private Object rejectedValue;
 	private String message;
 	
-	public RESTFieldError(FieldError error) {
+	public RestFieldError(FieldError error) {
 		this.field = error.getField();
 		this.rejectedValue = error.getRejectedValue();
 		this.message = error.getDefaultMessage();
 	}
 	
-	public RESTFieldError(String field, Object rejectedValue, String message) {
+	public RestFieldError(String field, Object rejectedValue, String message) {
 		super();
 		this.field = field;
 		this.rejectedValue = rejectedValue;
@@ -46,7 +46,7 @@ public class RESTFieldError {
 
 	@Override
 	public String toString() {
-		return "RESTFieldError [field=" + field + ", rejectedValue=" + rejectedValue + ", message=" + message + "]";
+		return "RestFieldError [field=" + field + ", rejectedValue=" + rejectedValue + ", message=" + message + "]";
 	}
 
 	

@@ -7,16 +7,16 @@ import java.util.List;
 /**
  * 所有异常都将返回该错误对象
  */
-public class RESTError {
+public class RestError {
 	private HttpStatus status;
 	private int code;
-	private List<RESTFieldError> fieldErrors;
+	private List<RestFieldError> fieldErrors;
 	private String moreInfoURL;
 	
-	public RESTError() {
+	public RestError() {
 	}
 
-	public RESTError(HttpStatus status, int code, List<RESTFieldError> fieldErrors, String moreInfoURL
+	public RestError(HttpStatus status, int code, List<RestFieldError> fieldErrors, String moreInfoURL
 			) {
 		this.status = status;
 		this.code = code;
@@ -41,11 +41,11 @@ public class RESTError {
 		this.code = code;
 	}
 
-	public List<RESTFieldError> getFieldErrors() {
+	public List<RestFieldError> getFieldErrors() {
 		return fieldErrors;
 	}
 
-	public void setFieldErrors(List<RESTFieldError> fieldErrors) {
+	public void setFieldErrors(List<RestFieldError> fieldErrors) {
 		this.fieldErrors = fieldErrors;
 	}
 
@@ -59,7 +59,7 @@ public class RESTError {
 
 	@Override
 	public String toString() {
-		return "RESTError [status=" + status + ", code=" + code + ", fieldErrors=" + fieldErrors + ", moreInfoURL="
+		return "RestError [status=" + status + ", code=" + code + ", fieldErrors=" + fieldErrors + ", moreInfoURL="
 				+ moreInfoURL + "]";
 	}
 	

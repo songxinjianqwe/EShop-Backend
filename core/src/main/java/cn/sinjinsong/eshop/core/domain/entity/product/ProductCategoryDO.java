@@ -1,5 +1,6 @@
 package cn.sinjinsong.eshop.core.domain.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,11 @@ public class ProductCategoryDO {
     @NotNull
     private String name;
     private List<ProductDO> products;
+    private String description;
+    @JsonIgnore
+    private Boolean isOnBoard;
+    private String alias;
+    
     public ProductCategoryDO(String name){
         this.name = name;
     }

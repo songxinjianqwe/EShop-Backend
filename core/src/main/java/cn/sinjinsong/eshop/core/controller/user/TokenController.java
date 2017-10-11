@@ -3,6 +3,7 @@ package cn.sinjinsong.eshop.core.controller.user;
 import cn.sinjinsong.eshop.common.exception.RestValidationException;
 import cn.sinjinsong.eshop.common.util.SpringContextUtil;
 import cn.sinjinsong.eshop.core.domain.dto.user.LoginDTO;
+import cn.sinjinsong.eshop.core.domain.dto.user.LoginSuccessResult;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
 import cn.sinjinsong.eshop.core.exception.token.CaptchaValidationException;
@@ -66,14 +67,14 @@ public class TokenController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "登录", response = String.class)
+    @ApiOperation(value = "登录", response = LoginSuccessResult.class)
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "验证码错误"),
             @ApiResponse(code = 400, message = "登录信息不完整"),
             @ApiResponse(code = 401, message = "用户名或密码错误"),
             @ApiResponse(code = 401, message = "用户未激活")
     })
-    public String login(@Valid @RequestBody @ApiParam(value = "登录信息，要求用户名或手机号或邮箱有一个非空，且登录模式与其对应，可选值为username或phone；密码非空；验证id和验证码也非空", required = true) LoginDTO loginDTO, BindingResult result) {
+    public LoginSuccessResult login(@Valid @RequestBody @ApiParam(value = "登录信息，要求用户名或手机号或邮箱有一个非空，且登录模式与其对应，可选值为username或phone；密码非空；验证id和验证码也非空", required = true) LoginDTO loginDTO, BindingResult result) {
         log.info("{}",loginDTO);
         //先验证图片验证码，再验证用户名和密码
         if (!verificationManager.checkVerificationCode(loginDTO.getCaptchaCode(), loginDTO.getCaptchaValue().toUpperCase())) {
@@ -114,7 +115,7 @@ public class TokenController {
         String token = tokenManager.createToken(username);
         //验证结束，清除验证码
         verificationManager.deleteVerificationCode(loginDTO.getCaptchaCode());
-        return token;
+        return new LoginSuccessResult(username,token);
     }
     
     @RequestMapping(method = RequestMethod.DELETE)

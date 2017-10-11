@@ -1,7 +1,7 @@
 package cn.sinjinsong.eshop.core.security.endpoint;
 
 import cn.sinjinsong.eshop.common.exception.base.BaseRestException;
-import cn.sinjinsong.eshop.common.exception.domain.RESTError;
+import cn.sinjinsong.eshop.common.exception.domain.RestError;
 import cn.sinjinsong.eshop.common.util.JsonUtil;
 import cn.sinjinsong.eshop.core.exception.user.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -26,6 +26,6 @@ public class RESTAccessDeniedHandler implements AccessDeniedHandler {
         BaseRestException exception = new AccessDeniedException(authentication.getAuthorities().toString());
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(exception.getStatus().value());
-        response.getWriter().append(JsonUtil.json(new RESTError(exception.getStatus(),exception.getCode(),exception.getErrors(),exception.getMoreInfoURL())));
+        response.getWriter().append(JsonUtil.json(new RestError(exception.getStatus(),exception.getCode(),exception.getErrors(),exception.getMoreInfoURL())));
     }
 }

@@ -43,6 +43,12 @@ public class ProductController {
         return productService.findAllCategories();
     }
 
+    @RequestMapping(value = "/categories/on_board", method = RequestMethod.GET)
+    @ApiOperation(value = "获取所有产品类别", response = ProductCategoryDO.class)
+    public List<ProductCategoryDO> findCategoriesOnBoard() {
+        return productService.findCategoriesOnBoard();
+    }
+
     @RequestMapping(value = "/by_category/{categoryId}", method = RequestMethod.GET)
     @ApiOperation(value = "按产品类别分页查询产品", response = ProductDO.class)
     public PageInfo<ProductDO> findProductByCategory(@PathVariable("categoryId") Long categoryId,
@@ -60,7 +66,7 @@ public class ProductController {
     public ProductDO findProductById(@PathVariable("id") @ApiParam(value = "产品id", required = true) Long id) {
         return productService.findProductById(id);
     }
-    
+
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "新增产品")
@@ -71,7 +77,7 @@ public class ProductController {
         }
         productService.saveProduct(product);
     }
-    
+
     @RequestMapping(method = RequestMethod.PUT)
     @ApiOperation(value = "修改产品")
     @PreAuthorize("hasRole('ADMIN')")
@@ -89,7 +95,7 @@ public class ProductController {
     public void saveCategory(@RequestParam("name") @ApiParam(value = "产品类别名字", required = true) String name) {
         productService.saveCategory(name);
     }
-    
+
     @RequestMapping(value = "/categories", method = RequestMethod.PUT)
     @ApiOperation(value = "修改产品类别")
     @PreAuthorize("hasRole('ADMIN')")

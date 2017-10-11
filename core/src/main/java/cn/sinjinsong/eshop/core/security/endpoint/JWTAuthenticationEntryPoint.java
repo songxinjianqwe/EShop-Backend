@@ -1,7 +1,7 @@
 package cn.sinjinsong.eshop.core.security.endpoint;
 
 import cn.sinjinsong.eshop.common.exception.base.BaseRestException;
-import cn.sinjinsong.eshop.common.exception.domain.RESTError;
+import cn.sinjinsong.eshop.common.exception.domain.RestError;
 import cn.sinjinsong.eshop.common.util.JsonUtil;
 import cn.sinjinsong.eshop.core.properties.AuthenticationProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.io.Serializable;
 @Component
 @Slf4j
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
-    private static final String UNAUTHORIZED = JsonUtil.json(new RESTError(HttpStatus.UNAUTHORIZED, 1, null, ""));
+    private static final String UNAUTHORIZED = JsonUtil.json(new RestError(HttpStatus.UNAUTHORIZED, 1, null, ""));
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
@@ -31,7 +31,7 @@ public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
             BaseRestException exception = (BaseRestException) request.getAttribute(AuthenticationProperties.EXCEPTION_ATTR_NAME);
             response.setStatus(exception.getStatus().value());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().append(JsonUtil.json(new RESTError(exception.getStatus(),exception.getCode(),exception.getErrors(),exception.getMoreInfoURL())));
+            response.getWriter().append(JsonUtil.json(new RestError(exception.getStatus(),exception.getCode(),exception.getErrors(),exception.getMoreInfoURL())));
         }else{
             response.setStatus(401);
             response.getWriter().append(UNAUTHORIZED);
