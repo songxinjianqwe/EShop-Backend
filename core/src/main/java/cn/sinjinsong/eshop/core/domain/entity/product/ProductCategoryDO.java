@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +23,7 @@ public class ProductCategoryDO {
 
     @NotNull
     private String name;
+    private List<ProductDO> products;
     public ProductCategoryDO(String name){
         this.name = name;
     }

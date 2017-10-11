@@ -137,6 +137,13 @@
         description = #{description,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
+    <select id="findByCategoryPaging" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from product
+        where category = #{categoryId}
+    </select>
+
     <select id="findByCategory" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

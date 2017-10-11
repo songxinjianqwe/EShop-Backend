@@ -5,6 +5,8 @@ import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface ProductDOMapper {
     /**
@@ -54,6 +56,6 @@ public interface ProductDOMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(ProductDO record);
-    Page<ProductDO> findByCategory(@Param("categoryId")Long category ,@Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
-    
+    Page<ProductDO> findByCategoryPaging(@Param("categoryId")Long category , @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
+    List<ProductDO> findByCategory(@Param("categoryId")Long category);
 }

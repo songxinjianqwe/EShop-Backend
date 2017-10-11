@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService{
     @Transactional(readOnly = true)
     @Override
     public PageInfo<ProductDO> findProductByCategory(Long categoryId, Integer pageNum, Integer pageSize) {
-        return productDOMapper.findByCategory(categoryId,pageNum,pageSize).toPageInfo();
+        return productDOMapper.findByCategoryPaging(categoryId,pageNum,pageSize).toPageInfo();
     }
     @Transactional(readOnly = true)
     @Override

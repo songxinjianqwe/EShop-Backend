@@ -43,8 +43,8 @@
         </javaClientGenerator>
 
       
-        <table tableName="balance"
-               domainObjectName="BalanceDO"
+        <table tableName="ad"
+               domainObjectName="AdDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
