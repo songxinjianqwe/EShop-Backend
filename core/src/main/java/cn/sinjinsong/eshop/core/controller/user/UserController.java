@@ -5,6 +5,7 @@ import cn.sinjinsong.eshop.common.util.FileUtil;
 import cn.sinjinsong.eshop.common.util.SpringContextUtil;
 import cn.sinjinsong.eshop.common.util.UUIDUtil;
 import cn.sinjinsong.eshop.core.controller.user.handler.QueryUserHandler;
+import cn.sinjinsong.eshop.core.domain.dto.user.ResetPasswordDTO;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
 import cn.sinjinsong.eshop.core.exception.token.ActivationCodeValidationException;
@@ -183,21 +184,25 @@ public class UserController {
         //发送邮件
         Map<String, Object> params = new HashMap<>();
         params.put("id", user.getId());
-        params.put("forgetPasswordCode", forgetPasswordCode);
+        params.put("validationCode", forgetPasswordCode);
         emailService.sendHTML(user.getEmail(), "forgetPassword", params, null);
     }
 
 
     @RequestMapping(value = "/{id}/password", method = RequestMethod.PUT)
     @ApiOperation(value = "忘记密码后可以修改密码", response = UserDO.class)
-    public UserDO resetPassword(@PathVariable("id") Long id, @RequestParam("verificationCode") @ApiParam(value = "验证码", required = true) String verificationCode, @RequestParam("password") @ApiParam(value = "新密码", required = true) String password) {
-        //获取Redis中的验证码
-        if (!verificationManager.checkVerificationCode(verificationCode, String.valueOf(id))) {
-            verificationManager.deleteVerificationCode(verificationCode);
-            throw new ActivationCodeValidationException(verificationCode);
+    public UserDO resetPassword(@PathVariable("id") Long id, @RequestBody @Valid ResetPasswordDTO dto,BindingResult result) {
+        if(result.hasErrors()){
+            throw new RestValidationException(result.getFieldErrors());
         }
-        verificationManager.deleteVerificationCode(verificationCode);
-        service.resetPassword(id, password);
+        String validationCode = dto.getValidationCode();
+        //获取Redis中的验证码
+        if (!verificationManager.checkVerificationCode(validationCode, String.valueOf(id))) {
+            verificationManager.deleteVerificationCode(validationCode);
+            throw new ActivationCodeValidationException(validationCode);
+        }
+        verificationManager.deleteVerificationCode(validationCode);
+        service.resetPassword(id, dto.getPassword());
         return service.findById(id);
     }
 
