@@ -8,6 +8,7 @@ import cn.sinjinsong.eshop.core.controller.user.handler.QueryUserHandler;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
 import cn.sinjinsong.eshop.core.exception.token.ActivationCodeValidationException;
+import cn.sinjinsong.eshop.core.exception.token.UserStatusInvalidException;
 import cn.sinjinsong.eshop.core.exception.user.QueryUserModeNotFoundException;
 import cn.sinjinsong.eshop.core.exception.user.UserNotFoundException;
 import cn.sinjinsong.eshop.core.exception.user.UsernameExistedException;
@@ -49,7 +50,7 @@ public class UserController {
     private EmailService emailService;
     @Autowired
     private AuthenticationProperties authenticationProperties;
-    
+
     /**
      * mode 支持id、username、email、手机号
      * 只有管理员或自己才可以查询某用户的完整信息
@@ -67,7 +68,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "只有管理员或用户自己能查询自己的用户信息"),
     })
     public UserDO findByKey(@PathVariable("key") @ApiParam(value = "查询关键字", required = true) String key, @RequestParam("mode") @ApiParam(value = "查询模式，可以是id或username或phone或email", required = true) String mode) {
-        
+
         QueryUserHandler handler = SpringContextUtil.getBean("QueryUserHandler", StringUtils.lowerCase(mode));
         if (handler == null) {
             throw new QueryUserModeNotFoundException(mode);
@@ -82,33 +83,42 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "创建用户，为用户发送验证邮件，等待用户激活，若24小时内未激活需要重新注册")
+    @ApiOperation(value = "创建用户", response = UserDO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 409, message = "用户名已存在"),
             @ApiResponse(code = 400, message = "用户属性校验失败")
     })
-    public void createUser(@RequestBody @Valid @ApiParam(value = "用户信息，用户的用户名、密码、昵称、邮箱不可为空", required = true) UserDO user, BindingResult result) {
-        log.info("{}",user);
+    public UserDO createUser(@RequestBody @Valid @ApiParam(value = "用户信息，用户的用户名、密码、昵称、邮箱不可为空", required = true) UserDO user, BindingResult result) {
+        log.info("{}", user);
         if (isUsernameDuplicated(user.getUsername())) {
             throw new UsernameExistedException(user.getUsername());
         } else if (result.hasErrors()) {
             throw new RestValidationException(result.getFieldErrors());
         }
-        
+        service.save(user);
+        return user;
+    }
+
+    @RequestMapping(value = "/{id}/mail_validation", method = RequestMethod.POST)
+    @ApiOperation(value = "为用户发送验证邮件，等待用户激活，若24小时内未激活需要重新注册")
+    public void sendActivationMail(@PathVariable("id") Long id) {
+        UserDO user = service.findById(id);
+        if (user == null) {
+            throw new UserNotFoundException(String.valueOf(id));
+        }
+        if (user.getUserStatus() != UserStatus.UNACTIVATED) {
+            throw new UserStatusInvalidException(user.getUserStatus().toString());
+        }
         //生成邮箱的激活码
         String activationCode = UUIDUtil.uuid();
-        //保存用户
-        service.save(user);
-        
-        verificationManager.createVerificationCode(activationCode, String.valueOf(user.getId()), authenticationProperties.getActivationCodeExpireTime());
-        log.info("{}     {}",user.getEmail(),user.getId());
-        //发送邮件
+        //发送验证邮件
+        verificationManager.createVerificationCode(activationCode, String.valueOf(id), authenticationProperties.getActivationCodeExpireTime());
+        log.info("{}     {}", user.getEmail(), user.getId());
         Map<String, Object> params = new HashMap<>();
         params.put("id", user.getId());
         params.put("activationCode", activationCode);
         emailService.sendHTML(user.getEmail(), "activation", params, null);
     }
-
 
     @RequestMapping(value = "/{id}/avatar", method = RequestMethod.GET)
     @ApiOperation(value = "获取用户的头像图片", response = Byte.class)
@@ -122,12 +132,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}/activation", method = RequestMethod.POST)
-    @ApiOperation(value = "用户激活，前置条件是用户已注册且在24小时内")
+    @ApiOperation(value = "用户激活，前置条件是用户已注册且在24小时内", response = UserDO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "未注册或超时或激活码错误")
     })
-    public void activate(@PathVariable("id") @ApiParam(value = "用户Id", required = true) Long id, @RequestParam("activationCode") @ApiParam(value = "激活码", required = true) String activationCode) {
+    public UserDO activate(@PathVariable("id") @ApiParam(value = "用户id", required = true) Long id, @RequestParam("activationCode") @ApiParam(value = "激活码", required = true) String activationCode) {
         UserDO user = service.findById(id);
+        if (user == null) {
+            throw new UserNotFoundException(String.valueOf(id));
+        }
         //获取Redis中的验证码
         if (!verificationManager.checkVerificationCode(activationCode, String.valueOf(id))) {
             verificationManager.deleteVerificationCode(activationCode);
@@ -136,8 +149,9 @@ public class UserController {
         user.setUserStatus(UserStatus.ACTIVATED);
         verificationManager.deleteVerificationCode(activationCode);
         service.update(user);
+        return user;
     }
-    
+
     // 更新
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("#user.username == principal.username or hasRole('ADMIN')")
@@ -155,14 +169,17 @@ public class UserController {
         service.update(user);
     }
 
-    @RequestMapping(value = "/{key}/password/reset_validation", method = RequestMethod.GET)
+    @RequestMapping(value = "/{key}/password/reset_validation", method = RequestMethod.POST)
     @ApiOperation(value = "发送忘记密码的邮箱验证", notes = "属性可以是id,sername或email或手机号", response = UserDO.class)
     public void forgetPassword(@PathVariable("key") @ApiParam(value = "关键字", required = true) String key, @RequestParam("mode") @ApiParam(value = "验证模式，可以是username或phone或email", required = true) String mode) {
         UserDO user = findByKey(key, mode);
+        if (user == null) {
+            throw new UserNotFoundException(key);
+        }
         //user 一定不为空
         String forgetPasswordCode = UUIDUtil.uuid();
         verificationManager.createVerificationCode(forgetPasswordCode, String.valueOf(user.getId()), authenticationProperties.getForgetNameCodeExpireTime());
-        log.info("{}   {}",user.getEmail(),user.getId());
+        log.info("{}   {}", user.getEmail(), user.getId());
         //发送邮件
         Map<String, Object> params = new HashMap<>();
         params.put("id", user.getId());
@@ -170,19 +187,20 @@ public class UserController {
         emailService.sendHTML(user.getEmail(), "forgetPassword", params, null);
     }
 
-        
+
     @RequestMapping(value = "/{id}/password", method = RequestMethod.PUT)
-    @ApiOperation(value = "忘记密码后可以修改密码")
-    public void resetPassword(@PathVariable("id") Long id, @RequestParam("forgetPasswordCode") @ApiParam(value = "验证码", required = true) String forgetPasswordCode, @RequestParam("password") @ApiParam(value = "新密码", required = true) String password) {
+    @ApiOperation(value = "忘记密码后可以修改密码", response = UserDO.class)
+    public UserDO resetPassword(@PathVariable("id") Long id, @RequestParam("verificationCode") @ApiParam(value = "验证码", required = true) String verificationCode, @RequestParam("password") @ApiParam(value = "新密码", required = true) String password) {
         //获取Redis中的验证码
-        if (!verificationManager.checkVerificationCode(forgetPasswordCode, String.valueOf(id))) {
-            verificationManager.deleteVerificationCode(forgetPasswordCode);
-            throw new ActivationCodeValidationException(forgetPasswordCode);
+        if (!verificationManager.checkVerificationCode(verificationCode, String.valueOf(id))) {
+            verificationManager.deleteVerificationCode(verificationCode);
+            throw new ActivationCodeValidationException(verificationCode);
         }
-        verificationManager.deleteVerificationCode(forgetPasswordCode);
-        service.resetPassword(id,password);
+        verificationManager.deleteVerificationCode(verificationCode);
+        service.resetPassword(id, password);
+        return service.findById(id);
     }
-    
+
     @RequestMapping(value = "/{username}/duplication", method = RequestMethod.GET)
     @ApiOperation(value = "查询用户名是否重复", response = Boolean.class)
     @ApiResponses(value = {@ApiResponse(code = 401, message = "未登录")})
@@ -192,12 +210,12 @@ public class UserController {
         }
         return true;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "分页查询用户信息", response = PageInfo.class, authorizations = {@Authorization("登录权限")})
     @ApiResponses(value = {@ApiResponse(code = 401, message = "未登录")})
-    public PageInfo<UserDO> findAllUsers(@RequestParam(value="pageNum",required = false,defaultValue = PageProperties.DEFAULT_PAGE_NUM) @ApiParam(value = "页码，从1开始", defaultValue = PageProperties.DEFAULT_PAGE_NUM) Integer pageNum, @RequestParam(value = "pageSize",required = false,defaultValue = PageProperties.DEFAULT_PAGE_SIZE) @ApiParam(value = "每页记录数", defaultValue = PageProperties.DEFAULT_PAGE_SIZE) Integer pageSize) {
+    public PageInfo<UserDO> findAllUsers(@RequestParam(value = "pageNum", required = false, defaultValue = PageProperties.DEFAULT_PAGE_NUM) @ApiParam(value = "页码，从1开始", defaultValue = PageProperties.DEFAULT_PAGE_NUM) Integer pageNum, @RequestParam(value = "pageSize", required = false, defaultValue = PageProperties.DEFAULT_PAGE_SIZE) @ApiParam(value = "每页记录数", defaultValue = PageProperties.DEFAULT_PAGE_SIZE) Integer pageSize) {
         return service.findAll(pageNum, pageSize);
     }
 }

@@ -106,12 +106,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //获取头像
                 .antMatchers(HttpMethod.GET, "/users/*/avatar").permitAll()
                 //用户激活
-                .antMatchers(HttpMethod.GET, "/users/*/activation").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/*/mail_validation").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/*/activation").permitAll()
                 //用户申请忘记密码
-                .antMatchers(HttpMethod.GET, "/users/*/password/reset_validation").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/*/password/reset_validation").permitAll()
                 //用户忘记密码后重置密码
                 .antMatchers(HttpMethod.PUT, "/users/*/password").permitAll()
-                .antMatchers(HttpMethod.GET,"/articles/**").permitAll()
                 //获取token
                 .antMatchers(HttpMethod.POST, "/tokens").permitAll() 
                 .antMatchers(HttpMethod.GET,"/news").permitAll()
