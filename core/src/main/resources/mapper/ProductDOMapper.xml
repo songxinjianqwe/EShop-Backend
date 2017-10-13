@@ -14,7 +14,7 @@
         <result column="is_on_promotion" property="isOnPromotion"></result>
         <result column="image_url" property="imageUrl"></result>
         <association column="category" property="category"
-                     select="cn.sinjinsong.eshop.core.dao.product.ProductCategoryDOMapper.selectByPrimaryKey"/>
+                     select="cn.sinjinsong.eshop.core.dao.product.ProductCategoryDOMapper.selectSimpleByPrimaryKey"/>
     </resultMap>
 
     <resultMap id="SimpleResultMap" type="cn.sinjinsong.eshop.core.domain.entity.product.ProductDO">
@@ -187,13 +187,14 @@
         where category = #{categoryId}
     </select>
 
+
     <select id="findSimpleByCategory" resultMap="SimpleResultMap">
         select
         <include refid="Base_Column_List"/>
         from product
         where category = #{categoryId}
     </select>
-    
+
     <select id="findOnPromotion" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

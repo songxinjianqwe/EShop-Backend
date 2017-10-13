@@ -55,6 +55,11 @@ public class ProductServiceImpl implements ProductService {
         return productDOMapper.findByCategoryPaging(categoryId, pageNum, pageSize).toPageInfo();
     }
 
+    @Override
+    public List<ProductDO> findSimpleProductByCategory(Long categoryId) {
+        return productDOMapper.findSimpleByCategory(categoryId);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public ProductDO findProductById(Long productId) {

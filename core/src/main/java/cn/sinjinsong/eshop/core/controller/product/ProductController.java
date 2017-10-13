@@ -62,11 +62,20 @@ public class ProductController {
         return productService.findProductByCategory(categoryId, pageNum, pageSize);
     }
 
+    
+    @RequestMapping(value = "/by_category/{categoryId}/simple", method = RequestMethod.GET)
+    @ApiOperation(value = "按产品类别查询简化的产品信息", response = ProductDO.class)
+    public List<ProductDO> findSimpleProductByCategory(@PathVariable("categoryId") Long categoryId){
+        return productService.findSimpleProductByCategory(categoryId);
+    }
+    
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "按id查询产品", response = ProductDO.class)
     public ProductDO findProductById(@PathVariable("id") @ApiParam(value = "产品id", required = true) Long id) {
         return productService.findProductById(id);
     }
+    
+    
 
     @RequestMapping(value = "/on_promotion", method = RequestMethod.GET)
     @ApiOperation(value = "按id查询产品", response = ProductDO.class)

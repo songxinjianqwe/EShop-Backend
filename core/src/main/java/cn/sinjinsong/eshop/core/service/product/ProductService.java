@@ -11,13 +11,23 @@ import java.util.List;
  */
 public interface ProductService {
     ProductCategoryDO findCategoryById(Long categoryId);
+
     List<ProductCategoryDO> findAllCategories(boolean containsProducts);
+
     List<ProductCategoryDO> findCategoriesOnBoard();
+
     List<ProductDO> findProductsOnPromotion();
-    PageInfo<ProductDO> findProductByCategory(Long categoryId,Integer pageNum, Integer pageSize);
+
+    PageInfo<ProductDO> findProductByCategory(Long categoryId, Integer pageNum, Integer pageSize);
+    
+    List<ProductDO> findSimpleProductByCategory(Long categoryId);
     ProductDO findProductById(Long productId);
+
     void saveProduct(ProductDO product);
+
     void updateProduct(ProductDO product);
+
     void saveCategory(String categoryName);
+
     void updateCategory(ProductCategoryDO category);
 }

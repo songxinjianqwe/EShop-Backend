@@ -117,8 +117,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/news").permitAll()
                 .antMatchers(HttpMethod.GET,"/news/latest").permitAll()
                 .antMatchers(HttpMethod.GET,"/products/categories").permitAll()
+                .antMatchers(HttpMethod.GET,"/products/categories/*").permitAll()
                 .antMatchers(HttpMethod.GET,"/products/categories/on_board").permitAll()
                 .antMatchers(HttpMethod.GET,"/products/by_category/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/products/by_category/*/simple").permitAll()
                 .antMatchers(HttpMethod.GET,"/products/*").permitAll()
                 .antMatchers(HttpMethod.GET,"/ads").permitAll()
                 
