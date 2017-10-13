@@ -11,8 +11,9 @@ import java.util.List;
  */
 public interface ProductService {
     ProductCategoryDO findCategoryById(Long categoryId);
-    List<ProductCategoryDO> findAllCategories();
+    List<ProductCategoryDO> findAllCategories(boolean containsProducts);
     List<ProductCategoryDO> findCategoriesOnBoard();
+    List<ProductDO> findProductsOnPromotion();
     PageInfo<ProductDO> findProductByCategory(Long categoryId,Integer pageNum, Integer pageSize);
     ProductDO findProductById(Long productId);
     void saveProduct(ProductDO product);

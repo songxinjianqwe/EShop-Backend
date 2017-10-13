@@ -53,7 +53,6 @@ public class ProductDO {
      * @mbggenerated
      */
     @NotNull
-    @JsonIgnore
     private ProductCategoryDO category;
     /**
      *
@@ -66,4 +65,7 @@ public class ProductDO {
     private ProductType type;
     @NotNull
     private String description;
+    @JsonIgnore
+    private Boolean isOnPromotion;
+    private String imageUrl;
 }

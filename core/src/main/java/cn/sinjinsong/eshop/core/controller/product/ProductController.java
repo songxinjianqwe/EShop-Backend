@@ -39,10 +39,11 @@ public class ProductController {
 
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @ApiOperation(value = "获取所有产品类别", response = ProductCategoryDO.class)
-    public List<ProductCategoryDO> findAllCategories() {
-        return productService.findAllCategories();
+    public List<ProductCategoryDO> findAllCategories(@RequestParam(value = "containsProducts",defaultValue = "false",required = false) Boolean containsProducts) {
+        return productService.findAllCategories(containsProducts);
     }
-
+    
+    
     @RequestMapping(value = "/categories/on_board", method = RequestMethod.GET)
     @ApiOperation(value = "获取所有产品类别", response = ProductCategoryDO.class)
     public List<ProductCategoryDO> findCategoriesOnBoard() {
@@ -67,6 +68,13 @@ public class ProductController {
         return productService.findProductById(id);
     }
 
+    @RequestMapping(value = "/on_promotion", method = RequestMethod.GET)
+    @ApiOperation(value = "按id查询产品", response = ProductDO.class)
+    public List<ProductDO> findProductsOnPromotion() {
+        return productService.findProductsOnPromotion();
+    }
+    
+    
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "新增产品")

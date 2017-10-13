@@ -28,7 +28,7 @@ public class ProductCategoryDO {
     private String description;
     @JsonIgnore
     private Boolean isOnBoard;
-    private String alias;
+    private String imageUrl;
     
     public ProductCategoryDO(String name){
         this.name = name;

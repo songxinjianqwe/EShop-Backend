@@ -30,13 +30,23 @@ public class MailServiceImpl implements MailService {
     private MailTextDOMapper mailTextDOMapper;
     @Autowired
     private UserDOMapper userDOMapper;
-    
-    
+
+
+    @Override
+    public Integer findCountByReceiver(Long receiver, MailStatus mailStatus) {
+        return mailDOMapper.findCountByReceiver(receiver,mailStatus);
+    }
+
+    @Override
+    public Integer findCountBySender(Long sender) {
+        return mailDOMapper.findCountBySender(sender);
+    }
+
     @Transactional
     @Override
     public PageInfo<MailDO> findByReceiver(Long receiver, int pageNum, int pageSize, MailStatus mailStatus) {
         PageInfo<MailDO> page = mailDOMapper.findByReceiver(receiver, pageNum, pageSize, mailStatus).toPageInfo();
-        if(page.getList().size() == 0){
+        if (page.getList().size() == 0) {
             return page;
         }
         //设置mail状态为已读
@@ -54,22 +64,22 @@ public class MailServiceImpl implements MailService {
     @Transactional
     @Override
     public void send(Long sender, List<Long> receivers, String text) {
-        if(receivers == null || receivers.size() == 0){
+        if (receivers == null || receivers.size() == 0) {
             throw new MailReceiverNotFoundException(sender);
         }
         MailTextDO mailTextDO = new MailTextDO(null, LocalDateTime.now(), text);
         mailTextDOMapper.insert(mailTextDO);
         List<MailDO> mailDOS = new ArrayList<>(receivers.size());
-        for(Long receiver:receivers){
+        for (Long receiver : receivers) {
             mailDOS.add(new MailDO(null, new UserDO(sender), new UserDO(receiver), MailStatus.NOT_VIEWED, mailTextDO));
         }
         mailDOMapper.insertBatch(mailDOS);
     }
-    
+
     @Transactional
     @Override
-    public void broadcast(Long sender, String text){
-        send(sender,userDOMapper.findAllUserIds(),text);
+    public void broadcast(Long sender, String text) {
+        send(sender, userDOMapper.findAllUserIds(), text);
     }
 
     @Transactional

@@ -17,7 +17,7 @@ public class ProductServiceTest extends BaseSpringTest {
     
     @Test
     public void findAllCategories() throws Exception {
-        service.findAllCategories().forEach(System.out::println);
+        service.findAllCategories(false).forEach(System.out::println);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ProductServiceTest extends BaseSpringTest {
     @Test
     public void saveCategory() throws Exception {
         service.saveCategory(".Net");
-        service.findAllCategories().forEach(System.out::println);
+        service.findAllCategories(false).forEach(System.out::println);
     }
 
     @Test

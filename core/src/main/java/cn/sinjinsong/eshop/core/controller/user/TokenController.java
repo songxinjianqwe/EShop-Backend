@@ -75,7 +75,7 @@ public class TokenController {
             @ApiResponse(code = 401, message = "用户未激活")
     })
     public LoginSuccessResult login(@Valid @RequestBody @ApiParam(value = "登录信息，要求用户名或手机号或邮箱有一个非空，且登录模式与其对应，可选值为username或phone；密码非空；验证id和验证码也非空", required = true) LoginDTO loginDTO, BindingResult result) {
-        log.info("{}",loginDTO);
+        log.info("{}", loginDTO);
         //先验证图片验证码，再验证用户名和密码
         if (!verificationManager.checkVerificationCode(loginDTO.getCaptchaCode(), loginDTO.getCaptchaValue().toUpperCase())) {
             //验证失败，清除验证码
@@ -90,12 +90,12 @@ public class TokenController {
         LoginHandler loginHandler = SpringContextUtil.getBean("LoginHandler", loginDTO.getUserMode().toString().toLowerCase());
         //下面进行校验
         UserDO user = loginHandler.handle(loginDTO);
-        log.info("{}",user);
+        log.info("{}", user);
         String username = null;
         if (user != null) {
             username = user.getUsername();
         }
-        
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, loginDTO.getPassword());
         Authentication authentication;
         try {
@@ -115,9 +115,9 @@ public class TokenController {
         String token = tokenManager.createToken(username);
         //验证结束，清除验证码
         verificationManager.deleteVerificationCode(loginDTO.getCaptchaCode());
-        return new LoginSuccessResult(username,token);
+        return new LoginSuccessResult(user.getId(), username, token);
     }
-    
+
     @RequestMapping(method = RequestMethod.DELETE)
     @ApiOperation(value = "登出", authorizations = {@Authorization("登录权限")})
     @ApiResponses(value = {

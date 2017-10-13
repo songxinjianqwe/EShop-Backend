@@ -27,17 +27,26 @@ public class ProductServiceImpl implements ProductService {
     public ProductCategoryDO findCategoryById(Long categoryId) {
         return productCategoryDOMapper.selectByPrimaryKey(categoryId);
     }
-
+    
     @Transactional(readOnly = true)
     @Override
-    public List<ProductCategoryDO> findAllCategories() {
-        return productCategoryDOMapper.findAll();
+    public List<ProductCategoryDO> findAllCategories(boolean containsProducts) {
+        if(containsProducts){
+            return productCategoryDOMapper.findAll();
+        }else{
+            return productCategoryDOMapper.findAllWithOutProducts();
+        }
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<ProductCategoryDO> findCategoriesOnBoard() {
         return productCategoryDOMapper.findOnBoard();
+    }
+
+    @Override
+    public List<ProductDO> findProductsOnPromotion() {
+        return productDOMapper.findOnPromotion();
     }
 
     @Transactional(readOnly = true)

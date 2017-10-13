@@ -56,6 +56,12 @@ public interface ProductDOMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(ProductDO record);
-    Page<ProductDO> findByCategoryPaging(@Param("categoryId")Long category , @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
-    List<ProductDO> findByCategory(@Param("categoryId")Long category);
+
+    Page<ProductDO> findByCategoryPaging(@Param("categoryId") Long category, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
+
+    List<ProductDO> findByCategory(@Param("categoryId") Long category);
+
+    List<ProductDO> findOnPromotion();
+
+    List<ProductDO> findSimpleByCategory(@Param("categoryId") Long category);
 }

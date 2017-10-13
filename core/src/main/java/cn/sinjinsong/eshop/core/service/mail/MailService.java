@@ -12,9 +12,12 @@ import java.util.List;
  */
 public interface MailService {
     PageInfo<MailDO> findByReceiver(Long receiver, int pageNum, int pageSize, MailStatus mailStatus);
-    
+
     PageInfo<MailDO> findBySender(Long sender, int pageNum, int pageSize);
 
+    Integer findCountByReceiver(Long receiver, MailStatus mailStatus);
+
+    Integer findCountBySender(Long sender);
 
     void send(Long sender, List<Long> receivers, String text);
 

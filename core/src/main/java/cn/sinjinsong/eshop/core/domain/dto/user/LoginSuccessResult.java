@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginSuccessResult {
+    private Long id;
     private String username;
     private String token;
 }

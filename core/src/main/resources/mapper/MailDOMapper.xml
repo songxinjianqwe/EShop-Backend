@@ -13,7 +13,7 @@
         <association property="text" column="text"
                      select="cn.sinjinsong.eshop.core.dao.mail.MailTextDOMapper.selectByPrimaryKey"></association>
     </resultMap>
-    
+
     <sql id="Base_Column_List">
         id, sender ,receiver , mail_status,text
     </sql>
@@ -39,12 +39,12 @@
 
     <insert id="insertBatch">
         insert into mail (id, sender, receiver,mail_status, text)
-        values 
+        values
         <foreach collection="mails" item="mail" separator=",">
             (#{mail.id}, #{mail.sender.id},#{mail.receiver.id},#{mail.mailStatus},#{mail.text.id})
         </foreach>
     </insert>
-    
+
     <select id="findByReceiver" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -71,5 +71,20 @@
             #{item_id}
         </foreach>
     </update>
-
+    
+    <select id="findCountBySender" resultType="int">
+        select count(*)
+        from mail
+        where sender = #{sender}
+    </select>
+    
+    <select id="findCountByReceiver" resultType="int">
+        select count(*)
+        from mail
+        where receiver = #{receiver}
+        <if test="mailStatus.toString != 'ALL'">
+            and
+            mail_status=#{mailStatus.code}
+        </if>
+    </select>
 </mapper>

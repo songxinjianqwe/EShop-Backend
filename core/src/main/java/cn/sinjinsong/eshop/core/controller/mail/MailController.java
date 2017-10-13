@@ -34,7 +34,7 @@ public class MailController {
     private MailService mailService;
     
     @RequestMapping(value = "/{targetId}", method = RequestMethod.GET)
-    @ApiOperation(value = "按照发信人或收信人的id以及发信状态", notes = "target是指定按照收信人还是发信人查询，可选值是sender和receiver；如果是按照收信人查询，那么必须指定mail_status，可选值为ALL、NOT_VIEWED、VIEWED；如果是按照发信人查询，则不需要给出该参数", response = PageInfo.class)
+    @ApiOperation(value = "按照发信人或收信人的id以及发信状态查询站内信信息", notes = "target是指定按照收信人还是发信人查询，可选值是sender和receiver；如果是按照收信人查询，那么必须指定mail_status，可选值为ALL、NOT_VIEWED、VIEWED；如果是按照发信人查询，则不需要给出该参数", response = PageInfo.class)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "按收信人查询时未给出mail_status"),
             @ApiResponse(code = 404, message = "未指定target")
@@ -52,6 +52,27 @@ public class MailController {
             return mailService.findByReceiver(targetId, pageNum, pageSize, MailStatus.valueOf(mailStatus.toUpperCase()));
         } else if (queryTarget == QueryMailTarget.SENDER) {
             return mailService.findBySender(targetId, pageNum, pageSize);
+        }
+        throw new MailTargetNotFoundException(target);
+    }
+    
+    @RequestMapping(value = "/{targetId}/size", method = RequestMethod.GET)
+    @ApiOperation(value = "按照发信人或收信人的id以及发信状态查询站内信数量", notes = "target是指定按照收信人还是发信人查询，可选值是sender和receiver；如果是按照收信人查询，那么必须指定mail_status，可选值为ALL、NOT_VIEWED、VIEWED；如果是按照发信人查询，则不需要给出该参数", response = PageInfo.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "按收信人查询时未给出mail_status"),
+            @ApiResponse(code = 404, message = "未指定target")
+    })
+    public Integer findMailsSize(@PathVariable("targetId") @ApiParam(value = "发信人或收信人的id", required = true) Long targetId,
+                                      @RequestParam("target") @ApiParam(value = "按照收信人还是发信人查询，可选值是sender和receiver", required = true) String target,
+                                      @RequestParam(value = "mail_status", required = false) @ApiParam(value = "递信状态，如果是按照收信人查询，那么必须指定，可选值为ALL、NOT_VIEWED、VIEWED", required = false) String mailStatus) {
+        QueryMailTarget queryTarget = QueryMailTarget.valueOf(StringUtils.upperCase(target));
+        if (queryTarget == QueryMailTarget.RECEIVER) {
+            if (StringUtils.isEmpty(mailStatus)) {
+                throw new MailStatusNotFoundException(targetId);
+            }
+            return mailService.findCountByReceiver(targetId,MailStatus.valueOf(mailStatus.toUpperCase()));
+        } else if (queryTarget == QueryMailTarget.SENDER) {
+            return mailService.findCountBySender(targetId);
         }
         throw new MailTargetNotFoundException(target);
     }

@@ -36,6 +36,9 @@ public interface MailDOMapper {
     MailDO selectByPrimaryKey(Long id);
     Page<MailDO> findBySender(@Param("sender") Long id, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
     Page<MailDO> findByReceiver(@Param("receiver") Long id, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize, @Param("mailStatus") MailStatus mailStatus);
+    Integer findCountBySender(@Param("sender") Long id);
+    Integer findCountByReceiver(@Param("receiver") Long id, @Param("mailStatus") MailStatus mailStatus);
+    
     void updateStatus(@Param("ids") List<Long> ids, @Param("mailStatus") MailStatus mailStatus);
     void insertBatch(@Param("mails") List<MailDO> mails);
 }
