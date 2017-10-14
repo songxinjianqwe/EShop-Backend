@@ -26,4 +26,5 @@ public class BalanceDO {
      * @mbggenerated
      */
     private Double balance;
+    private String paymentPassword;
 }

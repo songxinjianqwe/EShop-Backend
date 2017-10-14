@@ -6,6 +6,7 @@ import cn.sinjinsong.eshop.core.enumeration.product.ProductType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Created by SinjinSong on 2017/10/6.
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ProductServiceTest extends BaseSpringTest {
     @Autowired
     private ProductService service;
-    
+
     @Test
     public void findAllCategories() throws Exception {
         service.findAllCategories(false).forEach(System.out::println);
@@ -22,12 +23,12 @@ public class ProductServiceTest extends BaseSpringTest {
 
     @Test
     public void findProductByCategory() throws Exception {
-        service.findProductByCategory(1L,1,5).getList().forEach(System.out::println);
+        service.findProductByCategory(1L, 1, 5).getList().forEach(System.out::println);
     }
 
     @Test
     public void findProductById() throws Exception {
-        log.info("{}",service.findProductById(1L));
+        log.info("{}", service.findProductById(1L));
     }
 
     @Test
@@ -38,7 +39,7 @@ public class ProductServiceTest extends BaseSpringTest {
         productDO.setType(ProductType.HIGH);
         productDO.setDescription("PHP框架");
         service.saveProduct(productDO);
-        log.info("{}",service.findProductById(productDO.getId()));
+        log.info("{}", service.findProductById(productDO.getId()));
     }
 
     @Test
@@ -46,7 +47,7 @@ public class ProductServiceTest extends BaseSpringTest {
         ProductDO product = service.findProductById(1L);
         product.setDescription("JavaSE语法学习");
         service.updateProduct(product);
-        log.info("{}",service.findProductById(product.getId()));
+        log.info("{}", service.findProductById(product.getId()));
     }
 
     @Test
@@ -55,8 +56,17 @@ public class ProductServiceTest extends BaseSpringTest {
         service.findAllCategories(false).forEach(System.out::println);
     }
 
+    /**
+     * 加密:
+     * bcryptPasswordEncoder.encoder(password)
+     * 解密:
+     * bcrytPasswordEncoder.matches(rawPassword,encodedPassword)
+     * @throws Exception
+     */
     @Test
     public void updateCategory() throws Exception {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        log.info("{}",encoder.encode("admin"));
     }
 
 }

@@ -1,7 +1,9 @@
 package cn.sinjinsong.eshop.core.service.user.impl;
 
+import cn.sinjinsong.eshop.core.dao.pay.BalanceDOMapper;
 import cn.sinjinsong.eshop.core.dao.user.RoleDOMapper;
 import cn.sinjinsong.eshop.core.dao.user.UserDOMapper;
+import cn.sinjinsong.eshop.core.domain.entity.pay.BalanceDO;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
 import cn.sinjinsong.eshop.core.service.user.UserService;
@@ -24,7 +26,10 @@ public class UserServiceImpl implements UserService {
     private UserDOMapper userDOMapper;
     @Autowired
     private RoleDOMapper roleDOMapper;
-        
+    @Autowired
+    private BalanceDOMapper balanceDOMapper;
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     @Cacheable("UserDO")
     @Transactional(readOnly = true)
@@ -45,10 +50,10 @@ public class UserServiceImpl implements UserService {
     public UserDO findById(Long id) {
         return userDOMapper.selectByPrimaryKey(id);
     }
-    
+
     @Override
     @Transactional
-    @CacheEvict(value = "UserDO",allEntries = true)
+    @CacheEvict(value = "UserDO", allEntries = true)
     public void save(UserDO userDO) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         //对密码进行加密
@@ -59,31 +64,33 @@ public class UserServiceImpl implements UserService {
         userDOMapper.insert(userDO);
         //添加用户的角色，每个用户至少有一个user角色
         long roleId = roleDOMapper.findRoleIdByRoleName("ROLE_USER");
-        roleDOMapper.insertUserRole(userDO.getId(),roleId);
+        roleDOMapper.insertUserRole(userDO.getId(), roleId);
+
+        //在Balance表中添加用户
+        balanceDOMapper.insert(new BalanceDO(userDO, 0D, null));
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "UserDO",allEntries = true)
+    @CacheEvict(value = "UserDO", allEntries = true)
     public void update(UserDO userDO) {
         userDOMapper.updateByPrimaryKeySelective(userDO);
     }
-    
+
     @Override
     @Transactional
-    @CacheEvict(value = "UserDO",allEntries = true)
-    public void resetPassword(Long id,String newPassword) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @CacheEvict(value = "UserDO", allEntries = true)
+    public void resetPassword(Long id, String newPassword) {
         UserDO userDO = new UserDO();
         userDO.setId(id);
         userDO.setPassword(passwordEncoder.encode(newPassword));
         userDOMapper.updateByPrimaryKeySelective(userDO);
     }
-    
+
 
     @Override
     public PageInfo<UserDO> findAll(int pageNum, int pageSize) {
-        return userDOMapper.findAll(pageNum,pageSize).toPageInfo();
+        return userDOMapper.findAll(pageNum, pageSize).toPageInfo();
     }
 
     @Override

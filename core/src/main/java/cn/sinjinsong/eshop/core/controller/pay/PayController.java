@@ -39,7 +39,7 @@ public class PayController {
 
     @RequestMapping(value = "/pay/{orderId}", method = RequestMethod.POST)
     @ApiOperation(value = "订单付款", authorizations = {@Authorization("登录")})
-    public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId, @AuthenticationPrincipal JWTUser user) {
+    public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId,@RequestParam("payment_password") String paymentPassword, @AuthenticationPrincipal JWTUser user) {
         OrderDO order = orderService.findById(orderId);
         if (order == null) {
             throw new OrderNotFoundException(String.valueOf(orderId));
@@ -47,6 +47,12 @@ public class PayController {
         if (!user.getId().equals(order.getUser().getId())) {
             throw new AccessDeniedException(user.getUsername());
         }
-        payService.pay(order);
+        payService.pay(order,paymentPassword);
+    }
+
+    @RequestMapping(value = "/{userId}/payment_password", method = RequestMethod.POST)
+    @ApiOperation(value = "设置支付密码", authorizations = {@Authorization("登录")})
+    public void setPaymentPassword(@PathVariable("userId") @ApiParam(value = "订单id", required = true) Long userId,@RequestParam("payment_password") String paymentPassword) {
+        payService.setPaymentPassword(userId,paymentPassword);
     }
 }
