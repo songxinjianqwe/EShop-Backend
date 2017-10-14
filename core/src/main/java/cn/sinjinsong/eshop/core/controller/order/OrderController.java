@@ -47,8 +47,8 @@ public class OrderController {
     
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "下单", authorizations = {@Authorization("登录")})
-    public void placeOrder(@RequestBody @Valid @ApiParam(value = "订单对象") OrderDO order, BindingResult result) {
+    @ApiOperation(value = "下单", authorizations = {@Authorization("登录")},response=OrderDO.class)
+    public OrderDO placeOrder(@RequestBody @Valid @ApiParam(value = "订单对象") OrderDO order, BindingResult result) {
         log.info("{}", order);
         if (result.hasErrors()) {
             throw new RestValidationException(result.getFieldErrors());
@@ -61,6 +61,7 @@ public class OrderController {
         order.setPlaceTime(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.UNPAID);
         orderService.placeOrder(order);
+        return order;
     }
     
     @RequestMapping(method = RequestMethod.GET)

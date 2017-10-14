@@ -27,24 +27,24 @@ public class PayController {
     private PayService payService;
     @Autowired
     private OrderService orderService;
-    
+
     @RequestMapping(value = "/deposit/{userId}", method = RequestMethod.POST)
-    @ApiOperation(value="充值",authorizations = {@Authorization("登录")})
-    public void deposit(@PathVariable("userId") @ApiParam(value="用户id",required = true) Long userId, @RequestParam("amount") @ApiParam(value="充值金额",required = true) Double amount) {
-        if(amount <= 0){
+    @ApiOperation(value = "充值", authorizations = {@Authorization("登录")})
+    public void deposit(@PathVariable("userId") @ApiParam(value = "用户id", required = true) Long userId, @RequestParam("amount") @ApiParam(value = "充值金额", required = true) Double amount) {
+        if (amount <= 0) {
             throw new DepositException(String.valueOf(amount));
         }
         payService.deposit(userId, amount);
     }
-    
-    @RequestMapping(value= "/pay/{orderId}",method = RequestMethod.POST)
-    @ApiOperation(value="订单付款",authorizations = {@Authorization("登录")})
-    public void pay(@PathVariable("orderId") @ApiParam(value="订单id",required = true) Long orderId, @AuthenticationPrincipal JWTUser user) {
+
+    @RequestMapping(value = "/pay/{orderId}", method = RequestMethod.POST)
+    @ApiOperation(value = "订单付款", authorizations = {@Authorization("登录")})
+    public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId, @AuthenticationPrincipal JWTUser user) {
         OrderDO order = orderService.findById(orderId);
-        if(order == null){
+        if (order == null) {
             throw new OrderNotFoundException(String.valueOf(orderId));
         }
-        if(!user.getUsername().equals(order.getUser().getUsername())){
+        if (!user.getId().equals(order.getUser().getId())) {
             throw new AccessDeniedException(user.getUsername());
         }
         payService.pay(order);

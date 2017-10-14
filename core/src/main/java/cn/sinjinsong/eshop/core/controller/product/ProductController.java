@@ -39,11 +39,11 @@ public class ProductController {
 
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @ApiOperation(value = "获取所有产品类别", response = ProductCategoryDO.class)
-    public List<ProductCategoryDO> findAllCategories(@RequestParam(value = "containsProducts",defaultValue = "false",required = false) Boolean containsProducts) {
+    public List<ProductCategoryDO> findAllCategories(@RequestParam(value = "containsProducts", defaultValue = "false", required = false) Boolean containsProducts) {
         return productService.findAllCategories(containsProducts);
     }
-    
-    
+
+
     @RequestMapping(value = "/categories/on_board", method = RequestMethod.GET)
     @ApiOperation(value = "获取所有产品类别", response = ProductCategoryDO.class)
     public List<ProductCategoryDO> findCategoriesOnBoard() {
@@ -54,36 +54,35 @@ public class ProductController {
     @ApiOperation(value = "按产品类别分页查询产品", response = ProductDO.class)
     public PageInfo<ProductDO> findProductByCategory(@PathVariable("categoryId") Long categoryId,
                                                      @RequestParam(value = "pageNum", required = false, defaultValue = PageProperties.DEFAULT_PAGE_NUM)
-                                                     @ApiParam(value = "页码", required = false, defaultValue = PageProperties.DEFAULT_PAGE_NUM)
+                                                     @ApiParam(value = "页码", defaultValue = PageProperties.DEFAULT_PAGE_NUM)
                                                              Integer pageNum,
                                                      @RequestParam(value = "pageSize", required = false, defaultValue = PageProperties.DEFAULT_PAGE_SIZE)
-                                                     @ApiParam(value = "页的大小", required = false, defaultValue = PageProperties.DEFAULT_PAGE_SIZE)
+                                                     @ApiParam(value = "页的大小", defaultValue = PageProperties.DEFAULT_PAGE_SIZE)
                                                              Integer pageSize) {
         return productService.findProductByCategory(categoryId, pageNum, pageSize);
     }
 
-    
+
     @RequestMapping(value = "/by_category/{categoryId}/simple", method = RequestMethod.GET)
     @ApiOperation(value = "按产品类别查询简化的产品信息", response = ProductDO.class)
-    public List<ProductDO> findSimpleProductByCategory(@PathVariable("categoryId") Long categoryId){
+    public List<ProductDO> findSimpleProductByCategory(@PathVariable("categoryId") Long categoryId) {
         return productService.findSimpleProductByCategory(categoryId);
     }
-    
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "按id查询产品", response = ProductDO.class)
     public ProductDO findProductById(@PathVariable("id") @ApiParam(value = "产品id", required = true) Long id) {
         return productService.findProductById(id);
     }
-    
-    
+
 
     @RequestMapping(value = "/on_promotion", method = RequestMethod.GET)
     @ApiOperation(value = "按id查询产品", response = ProductDO.class)
     public List<ProductDO> findProductsOnPromotion() {
         return productService.findProductsOnPromotion();
     }
-    
-    
+
+
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "新增产品")

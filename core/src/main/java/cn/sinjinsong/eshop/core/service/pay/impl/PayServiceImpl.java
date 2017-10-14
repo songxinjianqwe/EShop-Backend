@@ -37,6 +37,9 @@ public class PayServiceImpl implements PayService {
             throw new OrderStateIllegalException(order.getOrderStatus().toString());
         }
         BalanceDO balanceDO = balanceDOMapper.selectByPrimaryKey(order.getUser().getId());
+        if (balanceDO == null) {
+            throw new BalanceNotEnoughException("0");
+        }
         if (order.getTotalPrice().compareTo(balanceDO.getBalance()) > 0) {
             throw new BalanceNotEnoughException(String.valueOf(balanceDO.getBalance()));
         }
