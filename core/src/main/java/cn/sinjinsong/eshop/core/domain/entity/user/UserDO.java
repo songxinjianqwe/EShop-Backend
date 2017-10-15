@@ -43,7 +43,6 @@ public class UserDO implements Serializable {
      *
      * @mbggenerated
      */
-    @NotNull
     private String password;
 
     /**

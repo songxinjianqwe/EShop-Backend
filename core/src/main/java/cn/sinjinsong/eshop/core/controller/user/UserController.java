@@ -1,7 +1,6 @@
 package cn.sinjinsong.eshop.core.controller.user;
 
 import cn.sinjinsong.eshop.common.exception.RestValidationException;
-import cn.sinjinsong.eshop.common.util.FileUtil;
 import cn.sinjinsong.eshop.common.util.SpringContextUtil;
 import cn.sinjinsong.eshop.common.util.UUIDUtil;
 import cn.sinjinsong.eshop.core.controller.user.handler.QueryUserHandler;
@@ -10,6 +9,7 @@ import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
 import cn.sinjinsong.eshop.core.exception.token.ActivationCodeValidationException;
 import cn.sinjinsong.eshop.core.exception.token.UserStatusInvalidException;
+import cn.sinjinsong.eshop.core.exception.user.PasswordNotFoundException;
 import cn.sinjinsong.eshop.core.exception.user.QueryUserModeNotFoundException;
 import cn.sinjinsong.eshop.core.exception.user.UserNotFoundException;
 import cn.sinjinsong.eshop.core.exception.user.UsernameExistedException;
@@ -29,8 +29,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,12 +54,15 @@ public class UserController {
      * mode 支持id、username、email、手机号
      * 只有管理员或自己才可以查询某用户的完整信息
      *
+     * 如果是用户，那么只能访问自己的信息
+     * 如果是管理员，那么只能访问自己的信息和所有用户的信息，不能访问其他管理员的信息
      * @param key
      * @param mode id、username、email、手机号
      * @return
+     * 
      */
     @RequestMapping(value = "/query/{key}", method = RequestMethod.GET)
-    @PostAuthorize("hasRole('ADMIN') or (returnObject.username ==  principal.username)")
+    @PostAuthorize("(hasRole('ADMIN') and not returnObject.roles.contains(new cn.sinjinsong.eshop.core.domain.entity.user.RoleDO(1,'ROLE_ADMIN'))) or (returnObject.username ==  principal.username)")
     @ApiOperation(value = "按某属性查询用户", notes = "属性可以是id或username或email或手机号", response = UserDO.class, authorizations = {@Authorization("登录权限")})
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "未登录"),
@@ -69,7 +70,6 @@ public class UserController {
             @ApiResponse(code = 403, message = "只有管理员或用户自己能查询自己的用户信息"),
     })
     public UserDO findByKey(@PathVariable("key") @ApiParam(value = "查询关键字", required = true) String key, @RequestParam("mode") @ApiParam(value = "查询模式，可以是id或username或phone或email", required = true) String mode) {
-
         QueryUserHandler handler = SpringContextUtil.getBean("QueryUserHandler", StringUtils.lowerCase(mode));
         if (handler == null) {
             throw new QueryUserModeNotFoundException(mode);
@@ -95,6 +95,8 @@ public class UserController {
             throw new UsernameExistedException(user.getUsername());
         } else if (result.hasErrors()) {
             throw new RestValidationException(result.getFieldErrors());
+        } else if(user.getPassword() == null){
+            throw new PasswordNotFoundException();
         }
         service.save(user);
         return user;
@@ -120,18 +122,7 @@ public class UserController {
         params.put("activationCode", activationCode);
         emailService.sendHTML(user.getEmail(), "activation", params, null);
     }
-
-    @RequestMapping(value = "/{id}/avatar", method = RequestMethod.GET)
-    @ApiOperation(value = "获取用户的头像图片", response = Byte.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "文件不存在"),
-            @ApiResponse(code = 400, message = "文件传输失败")
-    })
-    public void getUserAvatar(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
-        String relativePath = service.findAvatarById(id);
-        FileUtil.download(relativePath, request.getServletContext(), response);
-    }
-
+    
     @RequestMapping(value = "/{id}/activation", method = RequestMethod.POST)
     @ApiOperation(value = "用户激活，前置条件是用户已注册且在24小时内", response = UserDO.class)
     @ApiResponses(value = {
@@ -155,7 +146,7 @@ public class UserController {
 
     // 更新
     @RequestMapping(method = RequestMethod.PUT)
-    @PreAuthorize("#user.username == principal.username or hasRole('ADMIN')")
+    @PreAuthorize("#user.id == principal.id or hasRole('ADMIN')")
     @ApiOperation(value = "更新用户信息", authorizations = {@Authorization("登录权限")})
     @ApiResponses(value = {
             @ApiResponse(code = 401, message = "未登录"),
