@@ -4,6 +4,7 @@ package cn.sinjinsong.eshop.core.scheduler;
 import cn.sinjinsong.eshop.core.service.order.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -64,8 +65,8 @@ public class OrderScheduler {
     /**
      * 每隔1分钟将超时订单状态设置为超时
      */
-//    @Scheduled(cron = "0 0/1 * * * ? ")
-//    public void clearTimeOutOrders(){
-//        orderService.updateTimeOutOrders();
-//    }
+    @Scheduled(cron = "0 0/1 * * * ? ")
+    public void clearTimeOutOrders(){
+        orderService.updateTimeOutOrders();
+    }
 }
