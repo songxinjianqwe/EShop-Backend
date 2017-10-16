@@ -3,13 +3,13 @@ package cn.sinjinsong.eshop.core.service.pay.impl;
 import cn.sinjinsong.eshop.core.dao.pay.BalanceDOMapper;
 import cn.sinjinsong.eshop.core.domain.entity.order.OrderDO;
 import cn.sinjinsong.eshop.core.domain.entity.pay.BalanceDO;
-import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.order.OrderStatus;
 import cn.sinjinsong.eshop.core.exception.order.OrderStateIllegalException;
 import cn.sinjinsong.eshop.core.exception.pay.BalanceNotEnoughException;
 import cn.sinjinsong.eshop.core.exception.pay.PaymentPasswordInCorrectException;
 import cn.sinjinsong.eshop.core.service.order.OrderService;
 import cn.sinjinsong.eshop.core.service.pay.PayService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,9 +25,10 @@ public class PayServiceImpl implements PayService {
     @Autowired
     private OrderService orderService;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Transactional
     @Override
-    public void deposit(Long userId, Double amount) {
+    public void deposit(Long userId, Integer amount) {
         BalanceDO balanceDO = balanceDOMapper.selectByPrimaryKey(userId);
         balanceDO.setBalance(balanceDO.getBalance() + amount);
         balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
@@ -35,7 +36,7 @@ public class PayServiceImpl implements PayService {
 
     @Transactional
     @Override
-    public void pay(OrderDO order,String paymentPassword) {
+    public void pay(OrderDO order, String paymentPassword) {
         if (order.getOrderStatus() != OrderStatus.UNPAID) {
             throw new OrderStateIllegalException(order.getOrderStatus().toString());
         }
@@ -46,7 +47,7 @@ public class PayServiceImpl implements PayService {
         if (order.getTotalPrice().compareTo(balanceDO.getBalance()) > 0) {
             throw new BalanceNotEnoughException(String.valueOf(balanceDO.getBalance()));
         }
-        if(!passwordEncoder.matches(paymentPassword,balanceDO.getPaymentPassword())){
+        if (!passwordEncoder.matches(paymentPassword, balanceDO.getPaymentPassword())) {
             throw new PaymentPasswordInCorrectException(order.getUser().getUsername());
         }
         balanceDO.setBalance(balanceDO.getBalance() - order.getTotalPrice());
@@ -55,10 +56,16 @@ public class PayServiceImpl implements PayService {
         order.setOrderStatus(OrderStatus.PAID);
         orderService.updateOrder(order);
     }
-
+    
+    @Transactional
     @Override
-    public void setPaymentPassword(Long userId, String paymentPassword) {
-        
-        balanceDOMapper.updateByPrimaryKeySelective(new BalanceDO(new UserDO(userId),null,passwordEncoder.encode(paymentPassword)));
+    public void setPaymentPassword(Long userId, String oldPaymentPassword, String newPaymentPassword) {
+        BalanceDO balanceDO = balanceDOMapper.selectByPrimaryKey(userId);
+        if (StringUtils.isNotEmpty(balanceDO.getPaymentPassword()) && !passwordEncoder.matches(oldPaymentPassword, balanceDO.getPaymentPassword())) {
+            throw new PaymentPasswordInCorrectException(balanceDO.getUser().getUsername());
+        }
+        balanceDO.setPaymentPassword(passwordEncoder.encode(newPaymentPassword));
+        balanceDOMapper.updateByPrimaryKeySelective(balanceDO);
+
     }
 }

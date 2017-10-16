@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by SinjinSong on 2017/5/4.
  */
 public enum MailStatus {
-    VIEWED(1,"已查看"), NOT_VIEWED(0,"未查看"),ALL(3,"全部");
+    NOT_VIEWED(0, "未查看"), VIEWED(1, "已查看"), ALL(2, "全部");
     private int code;
     private String desc;
     
@@ -43,6 +43,6 @@ public enum MailStatus {
     public static MailStatus getByCode(int code) {
         return map.get(code);
     }
-    
+
 
 }

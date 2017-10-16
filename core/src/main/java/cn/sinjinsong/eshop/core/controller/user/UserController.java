@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,13 +54,13 @@ public class UserController {
     /**
      * mode 支持id、username、email、手机号
      * 只有管理员或自己才可以查询某用户的完整信息
-     *
+     * <p>
      * 如果是用户，那么只能访问自己的信息
      * 如果是管理员，那么只能访问自己的信息和所有用户的信息，不能访问其他管理员的信息
+     *
      * @param key
      * @param mode id、username、email、手机号
      * @return
-     * 
      */
     @RequestMapping(value = "/query/{key}", method = RequestMethod.GET)
     @PostAuthorize("(hasRole('ADMIN') and not returnObject.roles.contains(new cn.sinjinsong.eshop.core.domain.entity.user.RoleDO(1,'ROLE_ADMIN'))) or (returnObject.username ==  principal.username)")
@@ -95,7 +96,7 @@ public class UserController {
             throw new UsernameExistedException(user.getUsername());
         } else if (result.hasErrors()) {
             throw new RestValidationException(result.getFieldErrors());
-        } else if(user.getPassword() == null){
+        } else if (user.getPassword() == null) {
             throw new PasswordNotFoundException();
         }
         service.save(user);
@@ -122,7 +123,7 @@ public class UserController {
         params.put("activationCode", activationCode);
         emailService.sendHTML(user.getEmail(), "activation", params, null);
     }
-    
+
     @RequestMapping(value = "/{id}/activation", method = RequestMethod.POST)
     @ApiOperation(value = "用户激活，前置条件是用户已注册且在24小时内", response = UserDO.class)
     @ApiResponses(value = {
@@ -182,8 +183,8 @@ public class UserController {
 
     @RequestMapping(value = "/{id}/password", method = RequestMethod.PUT)
     @ApiOperation(value = "忘记密码后可以修改密码", response = UserDO.class)
-    public UserDO resetPassword(@PathVariable("id") Long id, @RequestBody @Valid ResetPasswordDTO dto,BindingResult result) {
-        if(result.hasErrors()){
+    public UserDO resetPassword(@PathVariable("id") Long id, @RequestBody @Valid ResetPasswordDTO dto, BindingResult result) {
+        if (result.hasErrors()) {
             throw new RestValidationException(result.getFieldErrors());
         }
         String validationCode = dto.getValidationCode();
@@ -213,5 +214,11 @@ public class UserController {
     @ApiResponses(value = {@ApiResponse(code = 401, message = "未登录")})
     public PageInfo<UserDO> findAllUsers(@RequestParam(value = "pageNum", required = false, defaultValue = PageProperties.DEFAULT_PAGE_NUM) @ApiParam(value = "页码，从1开始", defaultValue = PageProperties.DEFAULT_PAGE_NUM) Integer pageNum, @RequestParam(value = "pageSize", required = false, defaultValue = PageProperties.DEFAULT_PAGE_SIZE) @ApiParam(value = "每页记录数", defaultValue = PageProperties.DEFAULT_PAGE_SIZE) Integer pageSize) {
         return service.findAll(pageNum, pageSize);
+    }
+
+    @RequestMapping(value = "/query/fuzzy/{username}", method = RequestMethod.GET)
+    @ApiOperation(value = "按用户名模糊查询用户信息", response = UserDO.class, authorizations = {@Authorization("登录权限")})
+    public List<UserDO> findUserIdAndNamesContaining(@PathVariable("username") String username) {
+        return service.findIdAndNameByUsernameContaining(username);
     }
 }

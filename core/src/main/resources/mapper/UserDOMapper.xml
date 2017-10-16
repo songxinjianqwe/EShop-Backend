@@ -10,14 +10,15 @@
         <result column="birthday" property="birthday"/>
         <result column="email" property="email"/>
         <result column="phone" property="phone"/>
-        <result column="user_status" property="userStatus" javaType="cn.sinjinsong.eshop.core.enumeration.user.UserStatus"/>
+        <result column="user_status" property="userStatus"
+                javaType="cn.sinjinsong.eshop.core.enumeration.user.UserStatus"/>
         <result column="sex" property="sex"/>
         <result column="birthday" property="birthday"/>
         <result column="reg_time" property="regTime"/>
         <result column="avatar" property="avatar"/>
         <collection property="roles" column="id" select="cn.sinjinsong.eshop.core.dao.user.RoleDOMapper.findByUserId"/>
     </resultMap>
-    
+
     <resultMap id="BriefResultMap" type="cn.sinjinsong.eshop.core.domain.entity.user.UserDO">
         <id column="id" property="id"/>
         <result column="username" property="username"/>
@@ -26,6 +27,11 @@
         <result column="birthday" property="birthday"/>
         <result column="reg_time" property="regTime"/>
         <result column="avatar" property="avatar"/>
+    </resultMap>
+
+    <resultMap id="IdAndNameResultMap" type="cn.sinjinsong.eshop.core.domain.entity.user.UserDO">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -166,7 +172,19 @@
     <select id="findAllUserIds" resultType="long">
         select user
         from user_role 
-        where role in 
-        (select id from role where role_name = 'role_user')
+				group by user
+        having count(role) = 1
+    </select>
+
+    <select id="findIdAndNameByUsernameContaining" resultMap="IdAndNameResultMap">
+        <bind name="_username" value="'%'+username+'%'"/>
+        select id,username 
+        from user 
+        where username like #{_username} and id in
+        (select user
+        from user_role
+        group by user
+        having count(role) = 1
+        )
     </select>
 </mapper>

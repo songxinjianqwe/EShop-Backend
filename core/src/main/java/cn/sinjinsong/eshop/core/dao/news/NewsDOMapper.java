@@ -1,6 +1,7 @@
 package cn.sinjinsong.eshop.core.dao.news;
 
 import cn.sinjinsong.eshop.core.domain.entity.news.NewsDO;
+import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -41,6 +42,6 @@ public interface NewsDOMapper {
      */
     int updateByPrimaryKeySelective(NewsDO record);
 
-    List<NewsDO> findAll();
+    Page<NewsDO> findAll(@Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
     List<NewsDO> findLatest(@Param("count") Integer count);
 }

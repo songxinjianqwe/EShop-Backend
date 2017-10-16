@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by SinjinSong on 2017/4/27.
@@ -87,17 +88,29 @@ public class UserServiceImpl implements UserService {
         userDOMapper.updateByPrimaryKeySelective(userDO);
     }
 
+    @Transactional(readOnly = true)
+    @CacheEvict(value = "UserDO", allEntries = true)
+    @Override
+    public List<UserDO> findIdAndNameByUsernameContaining(String username) {
+        return userDOMapper.findIdAndNameByUsernameContaining(username);
+    }
 
+    @Transactional(readOnly = true)
+    @CacheEvict(value = "UserDO", allEntries = true)
     @Override
     public PageInfo<UserDO> findAll(int pageNum, int pageSize) {
         return userDOMapper.findAll(pageNum, pageSize).toPageInfo();
     }
 
+    @Transactional(readOnly = true)
+    @CacheEvict(value = "UserDO", allEntries = true)
     @Override
     public String findAvatarById(Long id) {
         return userDOMapper.findAvatarById(id);
     }
 
+    @Transactional(readOnly = true)
+    @CacheEvict(value = "UserDO", allEntries = true)
     @Override
     public UserDO findByEmail(String email) {
         return userDOMapper.findByEmail(email);

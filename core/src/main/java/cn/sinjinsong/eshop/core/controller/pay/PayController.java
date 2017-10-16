@@ -1,5 +1,7 @@
 package cn.sinjinsong.eshop.core.controller.pay;
 
+import cn.sinjinsong.eshop.common.exception.RestValidationException;
+import cn.sinjinsong.eshop.core.domain.dto.pay.PaymentPasswordDTO;
 import cn.sinjinsong.eshop.core.domain.entity.order.OrderDO;
 import cn.sinjinsong.eshop.core.exception.order.OrderNotFoundException;
 import cn.sinjinsong.eshop.core.exception.pay.DepositException;
@@ -14,7 +16,10 @@ import io.swagger.annotations.Authorization;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * Created by SinjinSong on 2017/10/7.
@@ -28,9 +33,9 @@ public class PayController {
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping(value = "/deposit/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/users/{userId}/deposit", method = RequestMethod.POST)
     @ApiOperation(value = "充值", authorizations = {@Authorization("登录")})
-    public void deposit(@PathVariable("userId") @ApiParam(value = "用户id", required = true) Long userId, @RequestParam("amount") @ApiParam(value = "充值金额", required = true) Double amount) {
+    public void deposit(@PathVariable("userId") @ApiParam(value = "用户id", required = true) Long userId, @RequestParam("amount") @ApiParam(value = "充值金额", required = true) Integer amount) {
         if (amount <= 0) {
             throw new DepositException(String.valueOf(amount));
         }
@@ -39,7 +44,7 @@ public class PayController {
 
     @RequestMapping(value = "/pay/{orderId}", method = RequestMethod.POST)
     @ApiOperation(value = "订单付款", authorizations = {@Authorization("登录")})
-    public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId,@RequestParam("payment_password") String paymentPassword, @AuthenticationPrincipal JWTUser user) {
+    public void pay(@PathVariable("orderId") @ApiParam(value = "订单id", required = true) Long orderId, @RequestParam("payment_password") String paymentPassword, @AuthenticationPrincipal JWTUser user) {
         OrderDO order = orderService.findById(orderId);
         if (order == null) {
             throw new OrderNotFoundException(String.valueOf(orderId));
@@ -47,12 +52,15 @@ public class PayController {
         if (!user.getId().equals(order.getUser().getId())) {
             throw new AccessDeniedException(user.getUsername());
         }
-        payService.pay(order,paymentPassword);
+        payService.pay(order, paymentPassword);
     }
 
-    @RequestMapping(value = "/{userId}/payment_password", method = RequestMethod.POST)
+    @RequestMapping(value = "/users/{userId}/payment_password", method = RequestMethod.POST)
     @ApiOperation(value = "设置支付密码", authorizations = {@Authorization("登录")})
-    public void setPaymentPassword(@PathVariable("userId") @ApiParam(value = "订单id", required = true) Long userId,@RequestParam("payment_password") String paymentPassword) {
-        payService.setPaymentPassword(userId,paymentPassword);
+    public void setPaymentPassword(@PathVariable("userId") @ApiParam(value = "订单id", required = true) Long userId, @RequestBody @Valid  PaymentPasswordDTO dto,BindingResult result) {
+        if(result.hasErrors()){
+            throw new RestValidationException(result.getFieldErrors());
+        }
+        payService.setPaymentPassword(userId, dto.getOldPaymentPassword(), dto.getNewPaymentPassword());
     }
 }

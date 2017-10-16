@@ -24,4 +24,5 @@ public interface MailService {
     void broadcast(Long sender, String text);
 
     void deleteMail(Long id);
+    void updateStatus(List<Long> ids,MailStatus mailStatus);
 }

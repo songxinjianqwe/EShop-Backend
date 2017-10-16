@@ -115,7 +115,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //获取token
                 .antMatchers(HttpMethod.POST, "/tokens").permitAll() 
                 .antMatchers(HttpMethod.GET,"/news").permitAll()
-                .antMatchers(HttpMethod.GET,"/news/latest").permitAll()
+                .antMatchers(HttpMethod.GET,"/news/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/news/query/latest").permitAll()
                 .antMatchers(HttpMethod.GET,"/products/categories").permitAll()
                 .antMatchers(HttpMethod.GET,"/products/categories/*").permitAll()
                 .antMatchers(HttpMethod.GET,"/products/categories/on_board").permitAll()

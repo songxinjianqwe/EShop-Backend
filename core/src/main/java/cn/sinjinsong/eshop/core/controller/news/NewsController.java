@@ -2,11 +2,12 @@ package cn.sinjinsong.eshop.core.controller.news;
 
 import cn.sinjinsong.eshop.common.exception.RestValidationException;
 import cn.sinjinsong.eshop.core.domain.entity.news.NewsDO;
+import cn.sinjinsong.eshop.core.properties.PageProperties;
 import cn.sinjinsong.eshop.core.service.news.NewsService;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Authorization;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,20 +30,19 @@ public class NewsController {
 
     @Autowired
     private NewsService newsService;
-
+    
     @RequestMapping(method = RequestMethod.GET)
-    @ApiOperation(value = "获取所有新闻", response = NewsDO.class)
-    public List<NewsDO> findAllNews() {
-        return newsService.findAllNews();
+    @ApiOperation(value = "获取所有新闻", response = PageInfo.class)
+    public PageInfo<NewsDO> findAllNews(@RequestParam(value = "pageNum", required = false, defaultValue = PageProperties.DEFAULT_PAGE_NUM) @ApiParam(value = "页码，从1开始", defaultValue = PageProperties.DEFAULT_PAGE_NUM) Integer pageNum, @RequestParam(value = "pageSize", required = false, defaultValue = PageProperties.DEFAULT_PAGE_SIZE) @ApiParam(value = "每页记录数", defaultValue = PageProperties.DEFAULT_PAGE_SIZE) Integer pageSize) {
+        return newsService.findAllNews(pageNum,pageSize);
     }
 
-    @RequestMapping(value = "/latest", method = RequestMethod.GET)
+    @RequestMapping(value = "/query/latest", method = RequestMethod.GET)
     @ApiOperation(value = "获取最新的指定条新闻", response = NewsDO.class)
     public List<NewsDO> findLatestNews(@RequestParam(value = "count", required = false, defaultValue = "5")
                                        @ApiParam(value = "最新的count条新闻，默认值为5") Integer count) {
         return newsService.findLatestNews(count);
     }
-
     
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
@@ -70,8 +70,7 @@ public class NewsController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(value = "按id查询新闻", response = NewsDO.class, authorizations = {@Authorization("管理员权限")})
+    @ApiOperation(value = "按id查询新闻", response = NewsDO.class)
     public NewsDO findNewsById(@PathVariable("id") @ApiParam("新闻id") Long id) {
         return newsService.findById(id);
     }

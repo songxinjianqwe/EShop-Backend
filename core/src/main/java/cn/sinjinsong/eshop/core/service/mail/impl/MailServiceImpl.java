@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by SinjinSong on 2017/5/4.
@@ -32,26 +31,23 @@ public class MailServiceImpl implements MailService {
     private UserDOMapper userDOMapper;
 
 
-    @Override
+    @Transactional(readOnly = true)
     public Integer findCountByReceiver(Long receiver, MailStatus mailStatus) {
-        return mailDOMapper.findCountByReceiver(receiver,mailStatus);
+        return mailDOMapper.findCountByReceiver(receiver, mailStatus);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Integer findCountBySender(Long sender) {
         return mailDOMapper.findCountBySender(sender);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public PageInfo<MailDO> findByReceiver(Long receiver, int pageNum, int pageSize, MailStatus mailStatus) {
         PageInfo<MailDO> page = mailDOMapper.findByReceiver(receiver, pageNum, pageSize, mailStatus).toPageInfo();
         if (page.getList().size() == 0) {
             return page;
         }
-        //设置mail状态为已读
-        List<Long> mails = page.getList().stream().map(MailDO::getId).collect(Collectors.toList());
-        mailDOMapper.updateStatus(mails, MailStatus.VIEWED);
         return page;
     }
 
@@ -76,6 +72,7 @@ public class MailServiceImpl implements MailService {
         mailDOMapper.insertBatch(mailDOS);
     }
 
+
     @Transactional
     @Override
     public void broadcast(Long sender, String text) {
@@ -86,5 +83,11 @@ public class MailServiceImpl implements MailService {
     @Override
     public void deleteMail(Long id) {
         mailDOMapper.deleteByPrimaryKey(id);
+    }
+
+    @Transactional
+    @Override
+    public void updateStatus(List<Long> ids, MailStatus mailStatus) {
+        mailDOMapper.updateStatus(ids, mailStatus);
     }
 }

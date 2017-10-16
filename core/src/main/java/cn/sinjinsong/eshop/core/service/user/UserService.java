@@ -4,6 +4,8 @@ package cn.sinjinsong.eshop.core.service.user;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 /**
  * Created by SinjinSong on 2017/4/27.
  */
@@ -17,4 +19,5 @@ public interface UserService {
     String findAvatarById(Long id);
     UserDO findByEmail(String email);
     void resetPassword(Long id, String newPassword);
+    List<UserDO> findIdAndNameByUsernameContaining(String username);
 }

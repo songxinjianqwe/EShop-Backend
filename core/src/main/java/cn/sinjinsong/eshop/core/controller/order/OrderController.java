@@ -44,10 +44,10 @@ public class OrderController {
     private UserService userService;
     @Autowired
     private ProductService productService;
-    
+
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "下单", authorizations = {@Authorization("登录")},response=OrderDO.class)
+    @ApiOperation(value = "下单", authorizations = {@Authorization("登录")}, response = OrderDO.class)
     public OrderDO placeOrder(@RequestBody @Valid @ApiParam(value = "订单对象") OrderDO order, BindingResult result) {
         log.info("{}", order);
         if (result.hasErrors()) {
@@ -63,7 +63,7 @@ public class OrderController {
         orderService.placeOrder(order);
         return order;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "分页查询所有订单", response = OrderDO.class, authorizations = {@Authorization("管理员权限")})
     @PreAuthorize("hasRole('ADMIN')")
@@ -75,7 +75,7 @@ public class OrderController {
                                              Integer pageSize) {
         return orderService.findAll(pageNum, pageSize);
     }
-    
+
     @RequestMapping(value = "/condition", method = RequestMethod.POST)
     @ApiOperation(value = "分页按条件查询订单", response = OrderDO.class, authorizations = {@Authorization("登录")})
     public PageInfo<OrderDO> findAllByCondition(@RequestBody @Valid @ApiParam(value = "查询对象，包含了查询的各种条件", required = true) OrderQueryConditionDTO queryDTO, BindingResult result) {
@@ -107,22 +107,22 @@ public class OrderController {
         }
         orderService.updateOrder(order);
     }
-    
-    @RequestMapping("/cancel/{orderId}")
+
+    @RequestMapping(value = "/cancel/{orderId}", method = RequestMethod.PUT)
     @ApiOperation(value = "取消订单", authorizations = {@Authorization("登录")})
-    public void cancelOrder(@PathVariable @ApiParam(value= "订单id",required = true) Long orderId, @AuthenticationPrincipal JWTUser user){
+    public void cancelOrder(@PathVariable @ApiParam(value = "订单id", required = true) Long orderId, @AuthenticationPrincipal JWTUser user) {
         OrderDO order = orderService.findById(orderId);
-        if(order == null){
+        if (order == null) {
             throw new OrderNotFoundException(String.valueOf(orderId));
         }
-        if(!user.getUsername().equals(order.getUser().getUsername())){
+        if (!user.getUsername().equals(order.getUser().getUsername())) {
             throw new AccessDeniedException(user.getUsername());
         }
-        if(order.getOrderStatus() != OrderStatus.UNPAID){
+        if (order.getOrderStatus() != OrderStatus.UNPAID) {
             throw new OrderStateIllegalException(order.getOrderStatus().toString());
         }
         order.setOrderStatus(OrderStatus.CANCELED);
         orderService.updateOrder(order);
     }
-    
+
 }

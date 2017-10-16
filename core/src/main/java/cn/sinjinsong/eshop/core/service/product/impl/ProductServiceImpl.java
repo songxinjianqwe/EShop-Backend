@@ -27,13 +27,13 @@ public class ProductServiceImpl implements ProductService {
     public ProductCategoryDO findCategoryById(Long categoryId) {
         return productCategoryDOMapper.selectByPrimaryKey(categoryId);
     }
-    
+
     @Transactional(readOnly = true)
     @Override
     public List<ProductCategoryDO> findAllCategories(boolean containsProducts) {
-        if(containsProducts){
+        if (containsProducts) {
             return productCategoryDOMapper.findAll();
-        }else{
+        } else {
             return productCategoryDOMapper.findAllWithOutProducts();
         }
     }
@@ -44,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
         return productCategoryDOMapper.findOnBoard();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProductDO> findProductsOnPromotion() {
         return productDOMapper.findOnPromotion();
@@ -55,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
         return productDOMapper.findByCategoryPaging(categoryId, pageNum, pageSize).toPageInfo();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ProductDO> findSimpleProductByCategory(Long categoryId) {
         return productDOMapper.findSimpleByCategory(categoryId);

@@ -52,6 +52,7 @@ public interface UserDOMapper {
     
     
     UserDO findByUsername(@Param("username") String username);
+    List<UserDO> findIdAndNameByUsernameContaining(@Param("username") String username);
     UserDO findByPhone(@Param("phone") String phone);
     Page<UserDO> findAll(@Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
     String findAvatarById(@Param("id") Long id);

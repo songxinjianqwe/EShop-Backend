@@ -18,7 +18,6 @@ public class NewsServiceTest extends BaseSpringTest{
     
     @Test
     public void findAllNews() throws Exception {
-        service.findAllNews().forEach(System.out::println);
     }
 
     @Test
