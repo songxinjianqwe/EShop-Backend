@@ -92,6 +92,7 @@
         select
         <include refid="Base_Column_List"/>
         from `order`
+        order by place_time desc
     </select>
     
     
@@ -115,5 +116,6 @@
                 and `order`.order_status = #{condition.status}
             </if>
         </where>
+        order by place_time desc
     </select>
 </mapper>

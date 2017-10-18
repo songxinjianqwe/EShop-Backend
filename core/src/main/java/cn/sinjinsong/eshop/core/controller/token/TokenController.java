@@ -1,4 +1,4 @@
-package cn.sinjinsong.eshop.core.controller.user;
+package cn.sinjinsong.eshop.core.controller.token;
 
 import cn.sinjinsong.eshop.common.exception.RestValidationException;
 import cn.sinjinsong.eshop.common.util.SpringContextUtil;
@@ -13,6 +13,7 @@ import cn.sinjinsong.eshop.core.security.domain.JWTUser;
 import cn.sinjinsong.eshop.core.security.login.LoginHandler;
 import cn.sinjinsong.eshop.core.security.token.TokenManager;
 import cn.sinjinsong.eshop.core.security.verification.VerificationManager;
+import cn.sinjinsong.eshop.core.util.CosUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -38,7 +36,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/tokens")
-@Api(value = "tokens", description = "用户登录,toke")
+@Api(value = "tokens", description = "各类token")
 @Slf4j
 public class TokenController {
     @Autowired
@@ -47,7 +45,8 @@ public class TokenController {
     private VerificationManager verificationManager;
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private CosUtil cosUtil;
     /**
      * 1.用户登录时，先经过自定义的passcard_filter过滤器，
      * 该过滤器继承了AbstractAuthenticationProcessingFilter，
@@ -125,5 +124,11 @@ public class TokenController {
     })
     public void logout(@AuthenticationPrincipal JWTUser user) {
         tokenManager.deleteToken(user.getUsername());
+    }
+    
+    @RequestMapping(value = "/cos", method = RequestMethod.GET)
+    @ApiOperation(value = "获取腾讯云COS的上传Token", authorizations = {@Authorization("登录权限")})
+    public String requestCosToken(@RequestParam("bucket") String bucket,@RequestParam("cosPath") String cosPath) {
+        return cosUtil.getSign(bucket,cosPath);
     }
 }
