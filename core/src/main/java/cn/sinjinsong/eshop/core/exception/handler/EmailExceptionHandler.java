@@ -15,7 +15,7 @@ import java.util.Arrays;
 @Component
 public class EmailExceptionHandler extends SimpleAsyncUncaughtExceptionHandler {
     private static final Logger logger = Logger.getLogger(LoggingAspect.class.getName());
-
+    
     @Override
     public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
         logger.error(String.format("%s[%s] throws an exception", method.getName(), Arrays.toString(objects)), throwable);

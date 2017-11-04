@@ -18,6 +18,6 @@ public interface UserService {
     PageInfo<UserDO> findAll(int pageNum, int pageSize);
     String findAvatarById(Long id);
     UserDO findByEmail(String email);
-    void resetPassword(Long id, String newPassword);
+    void resetPassword(Long id, String username,String newPassword);
     List<UserDO> findIdAndNameByUsernameContaining(String username);
 }

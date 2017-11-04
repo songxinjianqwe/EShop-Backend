@@ -15,6 +15,7 @@ import cn.sinjinsong.eshop.core.exception.user.UserNotFoundException;
 import cn.sinjinsong.eshop.core.exception.user.UsernameExistedException;
 import cn.sinjinsong.eshop.core.properties.AuthenticationProperties;
 import cn.sinjinsong.eshop.core.properties.PageProperties;
+import cn.sinjinsong.eshop.core.security.domain.JWTUser;
 import cn.sinjinsong.eshop.core.security.verification.VerificationManager;
 import cn.sinjinsong.eshop.core.service.email.EmailService;
 import cn.sinjinsong.eshop.core.service.user.UserService;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +56,6 @@ public class UserController {
     /**
      * mode 支持id、username、email、手机号
      * 只有管理员或自己才可以查询某用户的完整信息
-     * <p>
      * 如果是用户，那么只能访问自己的信息
      * 如果是管理员，那么只能访问自己的信息和所有用户的信息，不能访问其他管理员的信息
      *
@@ -183,7 +184,7 @@ public class UserController {
 
     @RequestMapping(value = "/{id}/password", method = RequestMethod.PUT)
     @ApiOperation(value = "忘记密码后可以修改密码", response = UserDO.class)
-    public UserDO resetPassword(@PathVariable("id") Long id, @RequestBody @Valid ResetPasswordDTO dto, BindingResult result) {
+    public UserDO resetPassword(@PathVariable("id") Long id, @RequestBody @Valid ResetPasswordDTO dto, BindingResult result, @AuthenticationPrincipal JWTUser user) {
         if (result.hasErrors()) {
             throw new RestValidationException(result.getFieldErrors());
         }
@@ -194,7 +195,7 @@ public class UserController {
             throw new ActivationCodeValidationException(validationCode);
         }
         verificationManager.deleteVerificationCode(validationCode);
-        service.resetPassword(id, dto.getPassword());
+        service.resetPassword(id,user.getUsername(), dto.getPassword());
         return service.findById(id);
     }
 

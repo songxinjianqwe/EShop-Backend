@@ -44,8 +44,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
         } else {
             log.info("checking authentication {}", result);
             UserDetails userDetails = userDetailsService.loadUserByUsername(result.getUsername());
-
-            //如果未登录
+            //如果登陆后首次访问
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
