@@ -44,10 +44,7 @@
 - 用户充值
 - 订单付款
 
-## TODO
-- 集成markdown编辑器
-
-## 使用Cos云存储
+## Cos云存储
 
 1. 准备：获取appId、secretId、secretKey以及在官网上设置CORS
 2. JS部分：进行文件上传/下载
