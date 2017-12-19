@@ -11,14 +11,14 @@ import java.util.Arrays;
 @Configuration
 @Slf4j
 public class LoggingAspect {
-    //execution(* cn.sinjinsong.skeleton.service.*.*(..))
     @Pointcut("@within(org.springframework.stereotype.Service)||@annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public void declareJoinPointExpression() {
     }
-
+    
     @Before("declareJoinPointExpression()")
-    public void beforeMethod(JoinPoint joinPoint) {// 连接点
-        Object[] args = joinPoint.getArgs();// 取得方法参数
+    public void beforeMethod(JoinPoint joinPoint) {
+        // 取得方法参数
+        Object[] args = joinPoint.getArgs();
         log.info("The method [ {} ] begins with Parameters: {}", joinPoint.getSignature(), Arrays.toString(args));
     }
 

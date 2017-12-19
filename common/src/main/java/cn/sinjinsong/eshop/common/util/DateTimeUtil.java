@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateTimeUtil {
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private DateTimeUtil() {}
     public static LocalDateTime toLocalDateTime(Long date) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
     }

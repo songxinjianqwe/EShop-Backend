@@ -1,6 +1,6 @@
 package cn.sinjinsong.eshop.core.service.email.impl;
 
-import cn.sinjinsong.eshop.common.exception.file.FileNotFoundException;
+import cn.sinjinsong.eshop.core.exception.user.EmailTemplateNotFoundException;
 import cn.sinjinsong.eshop.core.properties.EmailSubjectProperties;
 import cn.sinjinsong.eshop.core.service.email.EmailService;
 import lombok.Getter;
@@ -83,7 +83,7 @@ public class EmailServiceImpl implements EmailService {
                 for (String filePath : filePaths) {
                     file = new File(filePath);
                     if (!file.exists()) {
-                        throw new FileNotFoundException(filePath);
+                        throw new EmailTemplateNotFoundException(filePath);
                     }
                     fileSystemResource = new FileSystemResource(file);
                     helper.addAttachment(filePath.substring(filePath.lastIndexOf(File.separator)), fileSystemResource);

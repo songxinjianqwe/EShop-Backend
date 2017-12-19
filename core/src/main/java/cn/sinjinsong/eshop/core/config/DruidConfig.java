@@ -48,7 +48,12 @@ public class DruidConfig {
     private Boolean poolPreparedStatements;
     private Integer maxPoolPreparedStatementPerConnectionSize;
 
-    @Primary //默认数据源
+    /**
+     * 默认数据源
+     * @return
+     * @throws SQLException
+     */
+    @Primary 
     @Bean(name = "dataSource", destroyMethod = "close")
     public DruidDataSource dataSource() throws SQLException {
         DruidDataSource dataSource = new DruidDataSource();

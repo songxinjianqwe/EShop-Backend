@@ -53,6 +53,7 @@ public class RedisCacheConfig extends CachingConfigurerSupport {
         return template;
     }
 
+    @Override
     @Bean
     public KeyGenerator keyGenerator() {
         return new KeyGenerator() {

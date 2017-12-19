@@ -2,6 +2,8 @@ package cn.sinjinsong.eshop.common.exception.annotation;
 
 
 import cn.sinjinsong.eshop.common.exception.base.BaseRestException;
+import cn.sinjinsong.eshop.common.exception.meta.RestFieldAnnotationNotFoundException;
+import cn.sinjinsong.eshop.common.exception.meta.RestResponseStatusAnnotationNotFoundException;
 
 /**
  * Created by SinjinSong on 2017/3/27.

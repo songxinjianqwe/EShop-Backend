@@ -11,6 +11,16 @@ import java.util.List;
  * Created by SinjinSong on 2017/6/1.
  */
 public class PageUtil {
+    private PageUtil(){}
+
+    /**
+     * 分页状态下将PO转为VO
+     * @param src
+     * @param converter
+     * @param <T>
+     * @param <R>
+     * @return
+     */
     public static <T,R> PageInfo<R> convertPage(PageInfo<T> src, POVOConverter<T,R> converter) {
         List<R> list = new ArrayList<>();
         for(T t:src.getList()){
@@ -35,11 +45,15 @@ public class PageUtil {
         pageInfo.setEndRow(src.getEndRow());
         pageInfo.setTotal(src.getTotal());
         pageInfo.setNavigatePages(src.getNavigatePages());
-        pageInfo.setLastPage(src.getLastPage());
-        pageInfo.setFirstPage(src.getFirstPage());
         return pageInfo;
     }
-    
+
+    /**
+     * 将Spring Data的Page转为MyBatis PageHelper的PageInfo
+     * @param raw
+     * @param <E>
+     * @return
+     */
     public static <E> PageInfo<E> convertToGeneralPage(Page<E> raw){
         PageInfo<E> pageInfo = new PageInfo<>();
         pageInfo.setList(raw.getContent());

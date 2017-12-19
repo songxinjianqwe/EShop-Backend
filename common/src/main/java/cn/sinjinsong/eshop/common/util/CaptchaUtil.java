@@ -16,10 +16,17 @@ import java.util.concurrent.ThreadLocalRandom;
  * 验证码的生成
  */
 public final class CaptchaUtil {
-    private static final int CODE_NUM = 4; // 验证码字符个数
-    // 设置图形验证码中字符串的字体和大小
+    /**
+     * 验证码字符个数
+     */
+    private static final int CODE_NUM = 4;
+    /**
+     * 设置图形验证码中字符串的字体和大小
+     */
     private static final Font myFont = new Font("Arial", Font.BOLD, 16);
-    // 随机字符数组
+    /**
+     * 随机字符数组
+     */
     private static final char[] charSequence = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
     private static ThreadLocalRandom random;
 

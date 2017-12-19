@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -33,7 +32,6 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(false)
                 .globalOperationParameters(parameters)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("cn.sinjinsong.eshop.core.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -41,7 +39,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("SpringBoot项目骨架")
-                .description("集成了SpringBoot、SpringMVC、Spring、MyBaits、MyBatis Generator、MyBatis PageHelper、Druid、Lombok、JWT、Spring Security、JavaMail、Thymeleaf、HttpClient、FileUpload、Spring Scheduler、Hibernate Validator、Redis、Spring Async、Spring Cache、Swagger、Spring Test、MockMvc、HTTPS、Spring DevTools热部署、Logback多环境日志、国际化、(WebSocket、RabbitMQ)，REST风格的接口的Web项目")
+                .description("集成了SpringBoot、SpringMVC、Spring、MyBaits、MyBatis Generator、MyBatis PageHelper、Druid、Lombok、JWT、Spring Security、JavaMail、Thymeleaf、HttpClient、Spring Scheduler、Hibernate Validator、Redis、Spring Async、Spring Cache、Swagger、Spring Test、MockMvc、HTTPS、Spring DevTools热部署、Logback多环境日志、国际化、(WebSocket、RabbitMQ)，REST风格的接口的Web项目")
                 .termsOfServiceUrl("https://github.com/songxinjianqwe")
                 .contact(new Contact("SinjinSong", "https://github.com/songxinjianqwe", "151070063@smail.nju.edu.cn"))
                 .version("0.1")

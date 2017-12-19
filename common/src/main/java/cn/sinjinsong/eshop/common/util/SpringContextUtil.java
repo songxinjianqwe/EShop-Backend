@@ -22,7 +22,6 @@ public final class SpringContextUtil implements ApplicationContextAware {
 
     /**
      * 实现ApplicationContextAware接口的回调方法，设置上下文环境
-     *
      * @param applicationContext
      */
     @Override
