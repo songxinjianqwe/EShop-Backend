@@ -16,6 +16,7 @@ import cn.sinjinsong.eshop.core.exception.user.UsernameExistedException;
 import cn.sinjinsong.eshop.core.properties.AuthenticationProperties;
 import cn.sinjinsong.eshop.core.properties.PageProperties;
 import cn.sinjinsong.eshop.core.security.domain.JWTUser;
+import cn.sinjinsong.eshop.core.security.token.TokenManager;
 import cn.sinjinsong.eshop.core.security.verification.VerificationManager;
 import cn.sinjinsong.eshop.core.service.email.EmailService;
 import cn.sinjinsong.eshop.core.service.user.UserService;
@@ -52,7 +53,9 @@ public class UserController {
     private EmailService emailService;
     @Autowired
     private AuthenticationProperties authenticationProperties;
-
+    @Autowired
+    private TokenManager tokenManager;
+    
     /**
      * mode 支持id、username、email、手机号
      * 只有管理员或自己才可以查询某用户的完整信息
@@ -194,6 +197,7 @@ public class UserController {
             verificationManager.deleteVerificationCode(validationCode);
             throw new ActivationCodeValidationException(validationCode);
         }
+        tokenManager.deleteToken(user.getUsername());
         verificationManager.deleteVerificationCode(validationCode);
         service.resetPassword(id,user.getUsername(), dto.getPassword());
         return service.findById(id);

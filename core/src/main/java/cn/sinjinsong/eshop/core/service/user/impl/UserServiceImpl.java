@@ -6,7 +6,6 @@ import cn.sinjinsong.eshop.core.dao.user.UserDOMapper;
 import cn.sinjinsong.eshop.core.domain.entity.pay.BalanceDO;
 import cn.sinjinsong.eshop.core.domain.entity.user.UserDO;
 import cn.sinjinsong.eshop.core.enumeration.user.UserStatus;
-import cn.sinjinsong.eshop.core.security.token.TokenManager;
 import cn.sinjinsong.eshop.core.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BalanceDOMapper balanceDOMapper;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    @Autowired
-    private TokenManager tokenManager;
 
     @Override
     @Cacheable("UserDO")
@@ -88,7 +85,6 @@ public class UserServiceImpl implements UserService {
         UserDO userDO = new UserDO();
         userDO.setId(id);
         userDO.setPassword(passwordEncoder.encode(newPassword));
-        tokenManager.deleteToken(username);
         userDOMapper.updateByPrimaryKeySelective(userDO);
     }
 
